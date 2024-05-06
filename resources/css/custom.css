@@ -1,0 +1,232 @@
+
+html, body {
+    height: 100%;
+  }
+  
+  .navbar-white {
+  background-color: white !important;
+  }
+  
+  .navbar-brand-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  }
+  
+  .navbar-brand-vertical .brand-top,
+  .navbar-brand-vertical .brand-bottom {
+  line-height: 1;
+  }
+  
+  .navbar-brand-vertical .brand-top,
+  .navbar-brand-vertical .brand-bottom {
+  font-size: 1rem;
+  }
+  
+  .custom-margin {
+  margin-right: 50px; /* Jarak ke menu navigasi */
+  }
+  
+  .navbar-nav {
+  display: flex; /* Menjadikan ul sebagai flex container */
+  align-items: center; /* Menyelaraskan item di tengah secara vertikal */
+  gap: 20px; /* Memberikan jarak antar item menu */
+  }
+  .button-container {
+  display: flex;
+  gap: 10px; /* Menambahkan jarak antar tombol */
+  }
+  
+  .btn-fixed {
+  width: 120px; /* Atau gunakan min-width jika Anda ingin memastikan tombol tidak lebih kecil dari lebar tertentu tetapi bisa lebih besar jika isi teksnya membutuhkan */
+  text-align: center; /* Membuat teks berada di tengah tombol */
+  }
+  
+  .modal-backdrop.show {
+    backdrop-filter: blur(10px);
+  }
+  
+  .fullscreen-image {
+  width: 100%; /* Menjadikan lebar gambar penuh sesuai viewport */
+  height: 100vh; /* Menyetel tinggi gambar sesuai tinggi viewport */
+  object-fit: cover; /* Memastikan gambar menutupi seluruh area yang tersedia */
+  }
+  .daftar-sekarang {
+  position: absolute;
+  top: 75%; /* Posisi dari atas ke tengah */
+  left: 50%; /* Posisi dari kiri ke tengah */
+  transform: translate(-50%, -50%); /* Menggeser button agar tepat berada di tengah */
+  z-index: 10; /* Memastikan button berada di atas gambar */
+  }
+  .program-section {
+  padding: 100px 100px 10px 100px; /* Menerapkan padding dengan urutan top, right, bottom, dan left sebesar 100px, 100px, 10px, dan 100px. */
+  }
+  
+  .program-section .head-container {
+  text-align: center; /* Mengatur align teks menjadi center. */
+  margin-bottom: 50px; /* Menambahkan margin bawah sebesar 50px. */
+  }
+  
+  .program-section .head-container .title {
+  font-size: 38px; /* Mengatur ukuran font menjadi 38px. */
+  font-family: "Playfair Display", serif; /* Memilih font family 'Playfair Display' dengan backup font serif. */
+  font-weight: 800; /* Mengatur ketebalan font menjadi bold. */
+  text-transform: capitalize; /* Mengubah teks menjadi kapitalized. */
+  }
+  
+  .program-section .head-container .subtitle {
+  font-size: 18px; /* Mengatur ukuran font menjadi 18px. */
+  }
+  
+  .program-section .body-container {
+  display: flex; /* Mengatur display menjadi flex. */
+  flex-direction: column; /* Mengatur arah flex menjadi column. */
+  gap: 30px; /* Menambahkan jarak antar elemen sebesar 30px. */
+  }
+  
+  .program-section .body-container .program-item {
+  width: 100%; /* Mengatur lebar menjadi 100%. */
+  display: flex; /* Mengatur display menjadi flex. */
+  flex-wrap: wrap; /* Mengatur wrap item dalam flex. */
+  justify-content: center; /* Mengatur penyebaran menjadi center dalam flex. */
+  gap: 30px; /* Menambahkan jarak antar elemen sebesar 30px. */
+  }
+  
+  .custom-img-fit {
+  width: 100%; /* Mengatur lebar menjadi 100%. */
+  height: 100%; /* Mengatur tinggi menjadi 100%. */
+  -o-object-fit: cover; /* Untuk browser Opera, mengatur object fit menjadi cover. */
+  object-fit: cover; /* Mengatur object fit menjadi cover. */
+  }
+  
+  .program-section .body-container .program-item .image-box {
+  width: 450px; /* Mengatur lebar menjadi 450px. */
+  height: 300px; /* Mengatur tinggi menjadi 300px. */
+  border-radius: 20px; /* Mengatur border radius menjadi 20px. */
+  overflow: hidden; /* Mengatur overflow menjadi hidden. */
+  }
+  
+  .program-section .body-container .program-item .desc-box {
+  min-width: 300px; /* Mengatur lebar minimum menjadi 300px. */
+  width: 50%; /* Mengatur lebar menjadi 50%. */
+  display: flex; /* Mengatur display menjadi flex. */
+  flex-direction: column; /* Mengatur arah flex menjadi column. */
+  gap: 10px; /* Menambahkan jarak antar elemen sebesar 10px. */
+  }
+  
+  .program-section .body-container .program-item .desc-box .title {
+  font-size: 24px; /* Mengatur ukuran font menjadi 24px. */
+  text-transform: capitalize; /* Mengubah teks menjadi kapitalized. */
+  font-weight: 700; /* Mengatur ketebalan font menjadi bold. */
+  font-family: "Playfair Display", serif; /* Memilih font family 'Playfair Display' dengan backup font serif. */
+  }
+  
+  .program-section .body-container .program-item .desc-box .desc {
+  font-size: 16px; /* Mengatur ukuran font menjadi 16px. */
+  display: -webkit-box; /* Mengatur display menjadi box. */
+  overflow: hidden; /* Mengatur overflow menjadi hidden. */
+  -webkit-box-orient: vertical; /* Mengatur orientasi box menjadi vertical. */
+  -webkit-line-clamp: 8; /* Membatasi jumlah baris menjadi 8. */
+  }
+  
+  .program-section .body-container .program-item .desc-box .program-item_btn {
+  font-size: 16px; /* Mengatur ukuran font menjadi 16px. */
+  color: #33B5E5; /* Mengatur warna teks menjadi biru. */
+  }
+  
+  .program-section .body-container .program-item .desc-box .program-item_btn i {
+  margin-left: 5px; /* Menambahkan margin kiri sebesar 5px. */
+  }
+  
+  .program-section .body-container .program-item:nth-child(even) {
+  flex-direction: row-reverse; /* Untuk elemen dengan urutan genap, mengubah arah flex menjadi row-reverse. */
+  }
+  
+  .fasilitas-section {
+  padding: 75px;
+  margin-top: 50px;
+  min-height: 40vh; /* Mengatur tinggi minimum menjadi 80% dari viewport height. */
+  }
+  
+  .fasilitas-section .head-container {
+  text-align: center; /* Mengatur align teks menjadi center. */
+  margin-bottom: 50px; /* Menambahkan margin bawah sebesar 50px. */
+  }
+  
+  .fasilitas-section .head-container .title {
+  font-size: 38px; /* Mengatur ukuran font menjadi 38px. */
+  font-family: "Playfair Display", serif; /* Memilih font family 'Playfair Display' dengan backup font serif. */
+  font-weight: 800; /* Mengatur ketebalan font menjadi bold. */
+  text-transform: capitalize; /* Mengubah teks menjadi kapitalized. */
+  }
+  
+  .fasilitas-section .head-container .subtitle {
+  font-size: 18px; /* Mengatur ukuran font menjadi 18px. */
+  }
+  
+  .img-fluid {
+  max-width: 125px;
+  height: auto;
+  display: block; /* Membuat gambar menjadi block level untuk memudahkan centering */
+  margin: 0 auto; /* Ini akan memusatkan gambar dalam kontainernya */
+  }
+  
+  #notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4CAF50; /* Warna hijau */
+  color: white;
+  padding: 12px;
+  border-radius: 4px;
+  z-index: 5000; /* Pastikan notifikasi muncul di atas elemen lain */
+  display: none; /* Sembunyikan dulu notifikasi */
+  transition: opacity 0.6s, display 0s 0.6s; /* Animasi fade out */
+  }  
+  
+  .asuransi-section {
+  margin-top: 50px;
+  min-height: 10vh; /* Mengatur tinggi minimum menjadi 80% dari viewport height. */
+  }
+  
+  .asuransi-section .head-container .title {
+  font-size: 38px; /* Mengatur ukuran font menjadi 38px. */
+  font-family: "Playfair Display", serif; /* Memilih font family 'Playfair Display' dengan backup font serif. */
+  font-weight: 800; /* Mengatur ketebalan font menjadi bold. */
+  text-transform: capitalize; /* Mengubah teks menjadi kapitalized. */
+  }
+  
+  .map-and-address {
+    display: flex; /* Menggunakan flexbox untuk menyusun child elements secara horizontal */
+    align-items: stretch; /* Memastikan semua child elements memiliki tinggi yang sama */
+  }
+  
+  /* Menyesuaikan map-container untuk layout side-by-side */
+  .map-container {
+    flex-grow: 1; /* Memberikan flexibilitas pada kontainer peta, menyesuaikan lebar secara otomatis */
+    height: 200px; /* Menjaga tinggi tetap */
+    margin-right: 10px; /* Menambahkan sedikit ruang antara peta dan alamat, sesuaikan sesuai kebutuhan */
+  }
+  
+  #teks-alamat {
+    width: 200px; /* Atau sesuaikan lebar sesuai kebutuhan */
+    padding: 10px; /* Menambah padding untuk estetika */
+    background-color: #f8f9fa; /* Warna latar belakang */
+  }
+  
+  /* Jika .map-container memiliki lebar tetap yang ingin Anda pertahankan */
+  @media (min-width: 768px) {
+    .map-container {
+      flex: none; /* Mengembalikan perilaku lebar tetap pada viewports yang lebih besar */
+      width: 200px; /* Lebar tetap seperti yang ditentukan sebelumnya */
+    }
+  }
+  
+  /* Penyesuaian responsif */
+  @media (max-width: 768px) {
+    .map-container {
+      flex: 0 0 100%; /* Mengatur kembali kedua kontainer untuk mengambil 100% lebar pada layar kecil */
+      margin-right: 0; /* Menghapus margin kanan pada layar kecil */
+      margin-bottom: 10px; /* Menambahkan margin bawah untuk pemisah visual */
+    }
+  }
