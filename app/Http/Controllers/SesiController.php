@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class SesiController extends Controller
 {
@@ -97,9 +98,11 @@ class SesiController extends Controller
             'pekerjaan' => $request->pekerjaan
         ];
         $user = User::create($dataUser);
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
+        event(new Registered($user));
+        Auth::login($user);
         
-        return back()->with('success', 'Berhasil mendaftar, silahkan cek email anda untuk verifikasi.');
+        return redirect('/email');
     }
 
     public function actionlogout()

@@ -11,15 +11,10 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
     protected $fillable = [
-        'ktp',
-        'email',
-        'password',
-        'nama',
-        'no_hp',
-        'alamat',
-        'pekerjaan',
-        'role',
-        'email_verified_at'
+        'tanggal_transaksi',
+        'status_pembayaran',
+        'total_harga',
+        'pendaftaran_id'
     ];
 
     public function pendaftaran(){

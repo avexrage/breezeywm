@@ -13,7 +13,9 @@ class Pendaftaran extends Model
     protected $fillable = [
         'check_in',
         'check_out',
-        'metode_pembayaran'
+        'metode_pembayaran',
+        'program_id',
+        'user_id'
     ];
 
     public function program(){

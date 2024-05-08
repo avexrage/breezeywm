@@ -13,7 +13,7 @@ class DataPeserta extends Model
     use HasFactory;
 
     protected $fillable = ['ktp', 'nama_lengkap_peserta', 'alamat', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
-    'agama', 'status', 'pekerjaan', 'hobi', 'keahlian', 'bahasa'];
+    'agama', 'status', 'pekerjaan', 'hobi', 'keahlian', 'bahasa', 'asuransi_id'];
 
     protected $table = 'data_peserta';
 

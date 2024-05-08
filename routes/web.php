@@ -4,9 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\HomeController;
-use App\Http\Middleware\IsLogin;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Auth\VerifyController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,11 +27,7 @@ Route::get('/admin', function () {
     return view('admin.index');
 });
 
-Auth::routes(['verify' => true]);
-
-Route::get('email/verify/{id}/{hash}', [VerifyController::class, 'handleVerification'])->name('verification.verify');
-
-//LOGIN
+//LOGIN LOGOUT
 Route::get('/sesi', [SesiController::class, 'showLoginForm'])->name('login');
 Route::post('/sesi/login', [SesiController::class, 'actionLogin'])->name('actionlogin');
 Route::get('/sesi/logout', [SesiController::class, 'actionLogout'])->name('actionlogout');
@@ -41,6 +35,17 @@ Route::get('/sesi/logout', [SesiController::class, 'actionLogout'])->name('actio
 //REGISTER
 Route::get('/sesi/register', [SesiController::class, 'showRegisterForm'])->name('register');
 Route::post('/sesi/register/form', [SesiController::class, 'actionRegister'])->name('actionregister');
+
+//Email Verification
+Route::get('/email', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect('/pilihan-program');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 //HOME
 Route::get('/', [HomeController::class, 'landingPage'])->name('home');
@@ -51,8 +56,6 @@ Route::get('/pilihan-program', function (){
 })->name('daftar');
 
 //FORM
-Route::get('/form', [PendaftaranController::class, 'create'])->name('layouts.create')->middleware('IsLogin');
+Route::get('/form', [PendaftaranController::class, 'create'])->name('layouts.create')->middleware(['IsLogin']);
 Route::post('/form', [PendaftaranController::class, 'store'])->name('layouts.store');
-
-
 

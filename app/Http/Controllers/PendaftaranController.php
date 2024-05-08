@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\DataPeserta;
 use App\Models\Asuransi;
+use Illuminate\Support\Facades\DB;
 
 class PendaftaranController extends Controller
 {   
@@ -58,9 +59,9 @@ class PendaftaranController extends Controller
             'alamat' => 'required|string',
             'tlahir' => 'required|string',
             'tgllhr'  => 'required|date',
-            'kelamin'  => 'required|enum|in:',
-            'agama' => 'required|enum|in:' ,
-            'statusNikah' => 'required|enum|in:',
+            'kelamin' => 'required|in:Laki-laki, Perempuan',
+            'agama' => 'required|in:Islam, Kristen, Katolik, Hindu, Buddha',
+            'statusNikah' => 'required|in:Belum Kawin, Kawin, Cerai Mati, Cerai Hidup',
             'pekerjaan' => 'required|string|max:30',
             'asuransi' => 'required|string|max:50',
             'noasuransi' => 'required|string|max:16',
@@ -106,11 +107,15 @@ class PendaftaranController extends Controller
                 'nama_asuransi' => $request->asuransi,
                 'no_asuransi' => $request->noasuransi
             ]);
-            $dataPeserta->asuransi()->save($dataAsuransi);
+       
+            $dataAsuransi->save(); // Save asuransi record
+            $dataPeserta->asuransi_id = $dataAsuransi->id; // Assign asuransi_id to dataPeserta
+            $dataPeserta->save(); // Update dataPeserta with asuransi_id
         }
-
+   
         return 'HI';
-    }
+    
+}
 
     /**
      * Display the specified resource.

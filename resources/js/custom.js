@@ -54,3 +54,36 @@ document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach(anchor => {
         }
     });
 });
+
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const daftarButtons = document.querySelectorAll('.daftar-btn');
+
+    daftarButtons.forEach(button => {
+      button.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default button click
+
+        if (!isAuthenticated()) { // Check if user is logged in
+          displayLoginMessage(this); // Display login message
+        } else {
+          // Allow button's default behavior if user is logged in
+          // (e.g., submit form, redirect to URL)
+        }
+      });
+    });
+  });
+
+  function isAuthenticated() {
+    // Check if user is authenticated (you can use Laravel's `@auth` directive or JavaScript logic)
+    return true; // Replace with your authentication check logic
+  }
+
+  function displayLoginMessage(button) {
+    const loginMessage = document.createElement('span');
+    loginMessage.classList.add('text-danger', 'd-flex', 'justify-content-center');
+    loginMessage.textContent = 'Silahkan login dahulu untuk mendaftar program.';
+
+    button.parentNode.insertBefore(loginMessage, button.nextSibling); // Insert login message after button
+  }
+
