@@ -2,7 +2,7 @@
 @section('title', 'Login')
 @section('content0')
 
-
+<div class="container-fluid">
     <div class="row">
         <div class="col text-center d-flex align-items-center justify-content-center" style="font-size: 100px; height: 85vh; font-weight:400">
             Login
@@ -39,5 +39,5 @@
             </div>
         </div>
     </div>    
-
+</div>
 @endsection

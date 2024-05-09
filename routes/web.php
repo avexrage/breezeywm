@@ -55,6 +55,10 @@ Route::get('/pilihan-program', function (){
     return view('layouts.pilihanprogram');
 })->name('daftar');
 
+Route::get('/daftar', function () {
+    return view('layouts.daftar');
+});
+
 //FORM
 Route::get('/form', [PendaftaranController::class, 'create'])->name('layouts.create')->middleware(['IsLogin']);
 Route::post('/form', [PendaftaranController::class, 'store'])->name('layouts.store');
