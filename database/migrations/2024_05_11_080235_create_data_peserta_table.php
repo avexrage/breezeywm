@@ -22,14 +22,12 @@ return new class extends Migration
             $table->string('hobi', 30);
             $table->string('keahlian', 30);
             $table->string('bahasa', 30);
-            $table->foreignId('asuransi_id')->constrained('asuransi')->onDelete('cascade');
             $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
-    });
+        });
 
-}
-
-    public function down()
-    {
-        Schema::dropIfExists('data_peserta');
     }
+    public function down()
+        {
+            Schema::dropIfExists('data_peserta');
+        }
 };

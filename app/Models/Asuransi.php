@@ -9,12 +9,12 @@ class Asuransi extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama_asuransi', 'no_asuransi'];
+    protected $fillable = ['nama_asuransi', 'no_asuransi', 'data_peserta_id'];
     protected $table = 'asuransi';
     public $timestamps = false;
 
     public function dataPeserta()
     {
-        return $this->belongsTo(DataPeserta::class, 'asuransi_id', 'id');
+        return $this->hasOne(DataPeserta::class);
     }
 }

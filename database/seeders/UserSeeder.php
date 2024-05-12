@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         DB::table('user')->insert([
             ['ktp' => '3307091204010006', 
             'nama' => 'sidqi', 
-            'email' => 'poayof@gmail.com', 
+            'email' => 'rageave26@gmail.com', 
             'password' =>Hash::make('123456'),
             'no_hp' => '085161052931'],
             [

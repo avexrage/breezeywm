@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -44,22 +45,27 @@ Route::get('/email', function () {
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
  
-    return redirect('/pilihan-program');
+    return redirect('/')->with('success', 'Selamat Anda Berhasil Login');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
+Route::post('/email', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+ 
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
 //HOME
-Route::get('/', [HomeController::class, 'landingPage'])->name('home');
+Route::get('/', [HomeController::class, 'landingPage'])->middleware(['auth', 'verified'])->name('home');
 
 //PENDAFTARAN
 Route::get('/pilihan-program', function (){
     return view('layouts.pilihanprogram');
 })->name('daftar');
 
-Route::get('/daftar', function () {
-    return view('layouts.daftar');
-});
 
 //FORM
 Route::get('/form', [PendaftaranController::class, 'create'])->name('layouts.create')->middleware(['IsLogin']);
 Route::post('/form', [PendaftaranController::class, 'store'])->name('layouts.store');
 
+Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('layouts.showDaftar');
+Route::post('/daftar', [PendaftaranController::class, 'daftar'])->name('layouts.daftar');

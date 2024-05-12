@@ -4,14 +4,15 @@
 
 <body class="bg-light" >
 <div class="container text-success">
-    <h3>Daftar Program {{ request()->query('program') }}</h3>
+    <h1 class="display-6">Daftar Program </h1>
+    <h1 class="display-6"> {{ $program->nama_program }}</h1>
 </div>
 <main class="container text-success">
 <!-- START FORM -->
 @include('layouts.pesan')
 <form action="{{ route('layouts.store') }}" method="POST">
 @csrf
-<input type="hidden" name="program" value="{{ $program }}">
+<input type="hidden" name="program_id" value="{{ $program->id_program }}">
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <div class="mb-3 row">
         <label class="col-sm-2 col-form-label">ISI IDENTITAS LANSIA</label>

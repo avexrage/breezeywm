@@ -8,18 +8,18 @@
     <div class="col-sm-6 mb-3 mb-sm-0">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Grha Wredha Mulya</h5>
+          <h5 class="card-title">Day Care</h5>
           <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos sunt illum, ad deleniti maxime pariatur tempore ipsa rem incidunt perferendis, exercitationem nobis voluptates itaque similique, eum animi delectus minima. Eius?</p>
-          <a href="{{ route('layouts.create', ['program' => 'Grha Wredha Mulya']) }}" id="daftargrha" class="btn btn-success">Daftar Sekarang</a>
+          <a href="{{ route('layouts.create', ['id' => 11]) }}" id="daftarday" class="btn btn-success">Daftar Sekarang</a>
         </div>
       </div>
     </div>
     <div class="col-sm-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Day Care</h5>
+          <h5 class="card-title">Grha Wredha Mulya</h5>
           <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis consequuntur, similique quibusdam cum possimus odio repudiandae illo sapiente saepe officiis, accusamus perferendis magnam sequi eligendi enim vitae pariatur corporis non?</p>
-          <a href="{{ route('layouts.create', ['program' => 'Day Care']) }}" id="daftarday" class="btn btn-success">Daftar Sekarang</a>
+          <a href="{{ route('layouts.create', ['id' => 21]) }}" id="daftargrha" class="btn btn-success">Daftar Sekarang</a>
         </div>
       </div>
     </div>

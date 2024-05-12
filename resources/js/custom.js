@@ -87,3 +87,4 @@ document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach(anchor => {
     button.parentNode.insertBefore(loginMessage, button.nextSibling); // Insert login message after button
   }
 
+

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Program;
+use App\Models\Asuransi;
+use App\Models\DataPeserta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\DataPeserta;
-use App\Models\Asuransi;
-use Illuminate\Support\Facades\DB;
+
 
 class PendaftaranController extends Controller
 {   
@@ -26,7 +27,11 @@ class PendaftaranController extends Controller
      */
     public function create(Request $request)
     {
-        $program = $request->query('program'); // defaultProgram adalah nilai default
+        $programId = $request->id;
+            $program = Program::find($programId);
+            if (!$program) {
+                abort(404); // Program tidak ditemukan
+            } // defaultProgram adalah nilai default
         return view('layouts.create', compact('program'));
     }
 
@@ -59,9 +64,9 @@ class PendaftaranController extends Controller
             'alamat' => 'required|string',
             'tlahir' => 'required|string',
             'tgllhr'  => 'required|date',
-            'kelamin' => 'required|in:Laki-laki, Perempuan',
-            'agama' => 'required|in:Islam, Kristen, Katolik, Hindu, Buddha',
-            'statusNikah' => 'required|in:Belum Kawin, Kawin, Cerai Mati, Cerai Hidup',
+            'kelamin' => 'required|in:Laki-laki,Perempuan',
+            'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Khonghucu',
+            'statusNikah' => 'required|in:Belum Kawin,Kawin,Cerai Mati,Cerai Hidup',
             'pekerjaan' => 'required|string|max:30',
             'asuransi' => 'required|string|max:50',
             'noasuransi' => 'required|string|max:16',
@@ -88,6 +93,7 @@ class PendaftaranController extends Controller
         ]);
            
         $dataPeserta = DataPeserta::create([
+            'program_id' => 'required|exists:program,id_program',
             'ktp' => $request->ktp,
             'nama_lengkap_peserta' => $request->nama, 
             'alamat' => $request->alamat,
@@ -108,14 +114,22 @@ class PendaftaranController extends Controller
                 'no_asuransi' => $request->noasuransi
             ]);
        
-            $dataAsuransi->save(); // Save asuransi record
-            $dataPeserta->asuransi_id = $dataAsuransi->id; // Assign asuransi_id to dataPeserta
-            $dataPeserta->save(); // Update dataPeserta with asuransi_id
+            $dataPeserta->save(); // Save data_peserta record
+            $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
+            $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
         }
    
-        return 'HI';
+        return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
     
-}
+    }
+
+    public function showDaftar (){
+        return view('layouts.daftar');
+    }
+
+    public function daftar( Request $request){
+        
+    }
 
     /**
      * Display the specified resource.
