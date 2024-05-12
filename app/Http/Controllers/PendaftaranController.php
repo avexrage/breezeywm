@@ -59,6 +59,7 @@ class PendaftaranController extends Controller
         Session::flash('bahasa', $request->bahasa);
 
         $request->validate([
+            'program_id' => 'required|exists:program,id_program',
             'nama' => 'required|string|max:50',
             'ktp' => 'required|string|size:16|unique:data_peserta,ktp',
             'alamat' => 'required|string',

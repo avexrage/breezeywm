@@ -15,19 +15,15 @@ class Pendaftaran extends Model
         'check_out',
         'metode_pembayaran',
         'program_id',
-        'user_id'
+        'data_peserta_id'
     ];
 
     public function program(){
         return $this->belongsTo(Program::class, 'program_id', 'id_program');
     }
 
-    public function user(){
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
     public function dataPeserta(){
-        return $this->hasOne(DataPeserta::class);
+        return $this->belongsTo(DataPeserta::class);
     }
 
     public function transaksi(){

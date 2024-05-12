@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('hobi', 30);
             $table->string('keahlian', 30);
             $table->string('bahasa', 30);
-            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
+
         });
 
     }

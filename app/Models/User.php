@@ -53,8 +53,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function pendaftaran(){
-        return $this->hasMany(Pendaftaran::class);
+    public function dataPeserta(){
+        return $this->hasMany(DataPeserta::class);
     }
     
     public function sendEmailVerificationNotification(){

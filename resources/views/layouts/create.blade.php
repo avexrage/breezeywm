@@ -92,7 +92,7 @@
             </label>
         </div>
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="agama" id="agamaBudha" value="Budha" {{ Session::get('agama') == 'Budha' ? 'checked' : '' }}>
+            <input class="form-check-input" type="radio" name="agama" id="agamaBudha" value="Buddha" {{ Session::get('agama') == 'Buddha' ? 'checked' : '' }}>
             <label class="form-check-label" for="agamaBudha">
                 Budha
             </label>

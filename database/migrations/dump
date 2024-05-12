@@ -41,7 +41,6 @@ return new class extends Migration
 
 <!-- pendaftaran -->
 
-use App\Enums\MetodePembayaran;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -59,10 +58,11 @@ return new class extends Migration
             $table->id();
             $table->date('check_in'); 
             $table->date('check_out'); 
-            $table->date('metode_pembayaran')->default(MetodePembayaran::cash->value);
+            $table->enum('metode_pembayaran',['Tunai', 'Transfer BRI']);
             $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
-            $table->string('id_program', 5);
-            $table->foreign('id_program')->references('id_program')->on('program')->onDelete('cascade');
+            $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
+            $table->string('program_id', 5);
+            $table->foreign('program_id')->references('id_program')->on('program')->onDelete('cascade');
         });
     }
 
@@ -76,7 +76,6 @@ return new class extends Migration
         Schema::dropIfExists('pendaftaran');
     }
 };
-
 <!-- program -->
 
 use Illuminate\Database\Migrations\Migration;
@@ -135,15 +134,13 @@ return new class extends Migration
             $table->string('hobi', 30);
             $table->string('keahlian', 30);
             $table->string('bahasa', 30);
-            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
-    });
+        });
 
-}
-
-    public function down()
-    {
-        Schema::dropIfExists('data_peserta');
     }
+    public function down()
+        {
+            Schema::dropIfExists('data_peserta');
+        }
 };
 
 
@@ -217,8 +214,6 @@ return new class extends Migration
 
 
 //asuransi new
-
-<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
