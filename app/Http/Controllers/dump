@@ -1,0 +1,19 @@
+return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan')->with('program_id', $request->program_id);
+
+$programId = session('program_id', null);
+
+if (empty($programId)) {
+    abort(404, 'Program tidak ditemukan.');
+}
+
+$program = Program::find($programId);
+if (!$program) {
+    abort(404, 'Program tidak ditemukan.');
+}
+
+// Cek nilai program_id dan pilih view yang sesuai
+if ($programId == 21) {
+    return view('layouts.daftar2', compact('program'));
+} else {
+    return view('layouts.daftar', compact('program'));
+}

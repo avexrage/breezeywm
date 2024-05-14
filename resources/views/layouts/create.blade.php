@@ -4,13 +4,14 @@
 
 <body class="bg-light" >
 <div class="container text-success">
-    <h1 class="display-6">Daftar Program </h1>
-    <h1 class="display-6"> {{ $program->nama_program }}</h1>
+    <h1 class="display-6">
+    Daftar Program <br>
+    {{ $program->nama_program }}</h1>
 </div>
 <main class="container text-success">
 <!-- START FORM -->
 @include('layouts.pesan')
-<form action="{{ route('layouts.store') }}" method="POST">
+<form action="{{ route('simpanform') }}" method="POST">
 @csrf
 <input type="hidden" name="program_id" value="{{ $program->id_program }}">
 <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -30,7 +31,7 @@
         </div>
     </div>
     <div class="mb-3 row">
-        <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
+        <label for="alamat" class="col-sm-2 col-form-label">Alamat Lengkap</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" name='alamat' value="{{ Session::get('alamat') }}" id="alamat" style="text-transform: capitalize;">
         </div>

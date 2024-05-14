@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Program;
 use App\Models\Asuransi;
 use App\Models\DataPeserta;
+use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 
@@ -107,6 +110,7 @@ class PendaftaranController extends Controller
             'hobi' => $request->hobi,
             'keahlian' => $request->keahlian,
             'bahasa' => $request->bahasa,
+            'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
         ]);
 
         if (!empty($request->asuransi) && !empty($request->noasuransi)) {
@@ -119,13 +123,33 @@ class PendaftaranController extends Controller
             $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
             $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
         }
+
+        $pendaftaran = new Pendaftaran([
+            'check_in' => null, // Atur nilai default sesuai kebutuhan
+            'check_out' => null, // Atur nilai default sesuai kebutuhan
+            'metode_pembayaran' => null, // Atur nilai default sesuai kebutuhan
+            'program_id' => $request->program_id,
+            'data_peserta_id' => $dataPeserta->id,
+        ]);
+    
+        $pendaftaran->save(); // Simpan data pendaftaran
    
-        return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
+        if ($request->program_id == '11') {
+            return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
+        } else if ($request->program_id == '21') {
+            return redirect('/daftar/grha')->with('success', 'Data Peserta Berhasil Disimpan');
+        }
     
     }
 
-    public function showDaftar (){
+    public function showDaftar (Request $request){
+
         return view('layouts.daftar');
+    }
+
+    public function showDaftar2 (Request $request){
+
+        return view('layouts.daftar2');
     }
 
     public function daftar( Request $request){

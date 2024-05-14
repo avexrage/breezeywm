@@ -64,8 +64,10 @@ Route::get('/pilihan-program', function (){
 
 
 //FORM
-Route::get('/form', [PendaftaranController::class, 'create'])->name('layouts.create')->middleware(['IsLogin']);
-Route::post('/form', [PendaftaranController::class, 'store'])->name('layouts.store');
+Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['IsLogin']);
+Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
-Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('layouts.showDaftar');
-Route::post('/daftar', [PendaftaranController::class, 'daftar'])->name('layouts.daftar');
+Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
+Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
+Route::post('/daftar/daycare', [PendaftaranController::class, 'daftar'])->name('daftarday');
+Route::post('/daftar/grhawredha', [PendaftaranController::class, 'daftar'])->name('daftargrha');
