@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin',['Laki-laki', 'Perempuan']);
             $table->enum('agama',['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']);
-            $table->enum('status',['Belum Kawin', 'Kawin', 'Cerai Mati', 'Cerai Hidup']);
+            $table->enum('statusnikah',['Belum Kawin', 'Kawin', 'Cerai Mati', 'Cerai Hidup']);
             $table->string('pekerjaan', 30);
             $table->string('hobi', 30);
             $table->string('keahlian', 30);

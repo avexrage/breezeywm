@@ -110,11 +110,11 @@
         <label for="statusNikah" class="col-sm-2 col-form-label">Status Nikah</label>
         <div class="col-sm-10">
             <select class="form-control" name="statusNikah" id="statusNikah" style="width: auto; min-width: 100px;">
-                <option value="" disabled {{ Session::has('status') ? '' : 'selected' }}>Pilih Opsi</option>
-                <option value="Kawin" {{ Session::get('status') == 'Kawin' ? 'selected' : '' }}>Kawin</option>
-                <option value="Belum Kawin" {{ Session::get('status') == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
-                <option value="Cerai Hidup" {{ Session::get('status') == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
-                <option value="Cerai Mati" {{ Session::get('status') == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>
+                <option value="" disabled {{ Session::has('statusnikah') ? '' : 'selected' }}>Pilih Opsi</option>
+                <option value="Kawin" {{ Session::get('statusnikah') == 'Kawin' ? 'selected' : '' }}>Kawin</option>
+                <option value="Belum Kawin" {{ Session::get('statusnikah') == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
+                <option value="Cerai Hidup" {{ Session::get('statusnikah') == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
+                <option value="Cerai Mati" {{ Session::get('statusnikah') == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>
             </select>
         </div>
     </div>

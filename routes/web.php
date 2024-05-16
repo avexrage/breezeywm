@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PembayaranController;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -31,6 +32,7 @@ Route::get('/admin', function () {
 //LOGIN LOGOUT
 Route::get('/sesi', [SesiController::class, 'showLoginForm'])->name('login');
 Route::post('/sesi/login', [SesiController::class, 'actionLogin'])->name('actionlogin');
+
 Route::get('/sesi/logout', [SesiController::class, 'actionLogout'])->name('actionlogout');
 
 //REGISTER
@@ -68,6 +70,12 @@ Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform'
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
 Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
-Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
 Route::post('/daftar/daycare', [PendaftaranController::class, 'daftar'])->name('daftarday');
-Route::post('/daftar/grhawredha', [PendaftaranController::class, 'daftar'])->name('daftargrha');
+
+Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
+Route::post('/daftar/grhawredha', [PendaftaranController::class, 'daftar2'])->name('daftargrha');
+
+Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->name('cancel');
+
+//Pembayaran
+Route::get('/pembayaran/daycare', [PembayaranController::class, 'bayarday'])->name('bayarday');

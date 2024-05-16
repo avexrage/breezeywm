@@ -53,7 +53,7 @@ class PendaftaranController extends Controller
         Session::flash('tanggal_lahir', $request->tgllhr);
         Session::flash('jenis_kelamin', $request->kelamin);
         Session::flash('agama', $request->agama);
-        Session::flash('status', $request->statusNikah);
+        Session::flash('statusnikah', $request->statusNikah);
         Session::flash('pekerjaan', $request->pekerjaan);
         Session::flash('nama_asuransi', $request->asuransi);
         Session::flash('no_asuransi', $request->noasuransi);
@@ -61,7 +61,7 @@ class PendaftaranController extends Controller
         Session::flash('keahlian', $request->keahlian);
         Session::flash('bahasa', $request->bahasa);
 
-        $request->validate([
+        $validatedData = $request->validate([
             'program_id' => 'required|exists:program,id_program',
             'nama' => 'required|string|max:50',
             'ktp' => 'required|string|size:16|unique:data_peserta,ktp',
@@ -95,44 +95,8 @@ class PendaftaranController extends Controller
             'keahlian.required' => 'Keahlian wajib diisi.',
             'bahasa.required' => 'Bahasa Sehari-hari wajib diisi.',
         ]);
-           
-        $dataPeserta = DataPeserta::create([
-            'program_id' => 'required|exists:program,id_program',
-            'ktp' => $request->ktp,
-            'nama_lengkap_peserta' => $request->nama, 
-            'alamat' => $request->alamat,
-            'tempat_lahir' => $request->tlahir,
-            'tanggal_lahir' => $request->tgllhr,
-            'jenis_kelamin' => $request->kelamin,
-            'agama' => $request->agama,
-            'status' => $request->statusNikah,
-            'pekerjaan' => $request->pekerjaan,
-            'hobi' => $request->hobi,
-            'keahlian' => $request->keahlian,
-            'bahasa' => $request->bahasa,
-            'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
-        ]);
 
-        if (!empty($request->asuransi) && !empty($request->noasuransi)) {
-            $dataAsuransi = new Asuransi([
-                'nama_asuransi' => $request->asuransi,
-                'no_asuransi' => $request->noasuransi
-            ]);
-       
-            $dataPeserta->save(); // Save data_peserta record
-            $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
-            $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
-        }
-
-        $pendaftaran = new Pendaftaran([
-            'check_in' => null, // Atur nilai default sesuai kebutuhan
-            'check_out' => null, // Atur nilai default sesuai kebutuhan
-            'metode_pembayaran' => null, // Atur nilai default sesuai kebutuhan
-            'program_id' => $request->program_id,
-            'data_peserta_id' => $dataPeserta->id,
-        ]);
-    
-        $pendaftaran->save(); // Simpan data pendaftaran
+        $request->session()->put('form1_data', $validatedData);
    
         if ($request->program_id == '11') {
             return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
@@ -153,51 +117,78 @@ class PendaftaranController extends Controller
     }
 
     public function daftar( Request $request){
+
+        $validatedData = $request->validate([
+            'startDate' => 'required|date',
+            'endDate' => 'required|date|after_or_equal:check_in',
+            'metodePembayaran' => 'required|in:Tunai,Transfer BRI',
+            'totalPrice' => 'required|numeric'
+        ],[
+            'startDate.required'=> 'Tanggal mulai program wajib diisi',
+            'endDate.required'=> 'Tanggal selesai program wajib diisi',
+            'metodePembayaran.required'=> 'Metode pembayaran wajib diisi',
+            'totalPrice.required' => 'Pilih tanggal mulai dan selesai untuk menentukan total harga'
+        ]); 
+
+        $form1Data = $request->session()->get('form1_data');
+
+        if ($form1Data) {
+            //Simpan data ke tabel data_peserta
+        $dataPeserta = DataPeserta::create([
+            'program_id' => $form1Data['program_id'],
+            'ktp' => $form1Data['ktp'],
+            'nama_lengkap_peserta' => $form1Data['nama'],
+            'alamat' => $form1Data['alamat'],
+            'tempat_lahir' => $form1Data['tlahir'],
+            'tanggal_lahir' => $form1Data['tgllhr'],
+            'jenis_kelamin' => $form1Data['kelamin'],
+            'agama' => $form1Data['agama'],
+            'statusnikah' => $form1Data['statusNikah'],
+            'pekerjaan' => $form1Data['pekerjaan'],
+            'hobi' => $form1Data['hobi'],
+            'keahlian' => $form1Data['keahlian'],
+            'bahasa' => $form1Data['bahasa'],
+            'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
+        ]);
+            //Simpan data ke tabel asuransi
+        if (!empty($form1Data['asuransi']) && !empty($form1Data['noasuransi'])) {
+            $dataAsuransi = new Asuransi([
+                'nama_asuransi' => $form1Data['asuransi'],
+                'no_asuransi' => $form1Data['noasuransi']
+            ]);
+       
+            $dataPeserta->save(); // Save data_peserta record
+            $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
+            $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
+        }
+            // Simpan data ke tabel pendaftaran
+        $pendaftaran = new Pendaftaran([
+            'check_in' => $validatedData['startDate'],
+            'check_out' => $validatedData['endDate'],
+            'metode_pembayaran' => $validatedData['metodePembayaran'],
+            'total_harga' => $validatedData['totalPrice'],
+            'program_id' => $form1Data['program_id'],
+            'data_peserta_id' => $dataPeserta->id,
+        ]);
+    
+        $pendaftaran->save(); // Simpan data pendaftaran
+        
+        $request->session()->forget('form1_data'); // Clear session data
+
+        return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
+        }
+    }
+
+    public function daftar2(){
         
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function cancelRegistration(Request $request)
     {
-        //
-    }
+        // Clear session data
+        $request->session()->forget('form1_data');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // Redirect to the first form or any other page
+        return redirect()->route('daftar')->with('status', 'Pendaftaran Dibatalkan');
     }
 }
