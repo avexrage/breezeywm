@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('no_hp', 13);
             $table->string('alamat')->nullable();
             $table->string('pekerjaan')->nullable();
+            $table->string('pekerjaan')->nullable();
             $table->enum('role', ['admin', 'user'])->nullable();
             $table->timestamps();
         });

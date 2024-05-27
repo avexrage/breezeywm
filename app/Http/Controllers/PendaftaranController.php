@@ -8,6 +8,7 @@ use App\Models\DataPeserta;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Transaksi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -55,6 +56,7 @@ class PendaftaranController extends Controller
         Session::flash('agama', $request->agama);
         Session::flash('statusnikah', $request->statusNikah);
         Session::flash('pekerjaan', $request->pekerjaan);
+        Session::flash('riwayat_penyakit', $request->penyakit);
         Session::flash('nama_asuransi', $request->asuransi);
         Session::flash('no_asuransi', $request->noasuransi);
         Session::flash('hobi', $request->hobi);
@@ -64,7 +66,7 @@ class PendaftaranController extends Controller
         $validatedData = $request->validate([
             'program_id' => 'required|exists:program,id_program',
             'nama' => 'required|string|max:50',
-            'ktp' => 'required|string|size:16|unique:data_peserta,ktp',
+            'ktp' => 'required|string|size:16',
             'alamat' => 'required|string',
             'tlahir' => 'required|string',
             'tgllhr'  => 'required|date',
@@ -72,6 +74,7 @@ class PendaftaranController extends Controller
             'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Khonghucu',
             'statusNikah' => 'required|in:Belum Kawin,Kawin,Cerai Mati,Cerai Hidup',
             'pekerjaan' => 'required|string|max:30',
+            'penyakit' => 'required|string|max:50',
             'asuransi' => 'required|string|max:50',
             'noasuransi' => 'required|string|max:16',
             'hobi' => 'required|string|max:30',
@@ -80,7 +83,6 @@ class PendaftaranController extends Controller
         ], [
             'ktp.required' => 'Nomor KTP wajib diisi.',
             'ktp.size' => 'Nomor KTP harus tepat 16 digit.',
-            'ktp.unique' => 'Nomor KTP sudah terdaftar.',
             'nama.required' => 'Nama Lengkap wajib diisi.',
             'alamat.required' => 'Alamat wajib diisi.',
             'tlahir.required' => 'Tempat Lahir wajib diisi.',
@@ -89,6 +91,7 @@ class PendaftaranController extends Controller
             'agama.required' => 'Agama wajib diisi.',
             'statusNikah.required' => 'Status Nikah wajib diisi.',
             'pekerjaan.required' => 'Pekerjaan wajib diisi.',
+            'penyakit.required' => 'Riwayat Penyakit wajib diisi.',
             'asuransi.required' => 'Nama Asuransi wajib diisi. Bila tidak ada tulis Tidak Ada',
             'noasuransi.required' => 'No Asuransi wajib diisi. Bila tidak ada tulis Tidak Ada',
             'hobi.required' => 'Hobi wajib diisi.',
@@ -98,7 +101,7 @@ class PendaftaranController extends Controller
 
         $request->session()->put('form1_data', $validatedData);
    
-        if ($request->program_id == '11') {
+        if ($request->program_id == '111') {
             return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
         } else if ($request->program_id == '21') {
             return redirect('/daftar/grha')->with('success', 'Data Peserta Berhasil Disimpan');
@@ -111,23 +114,16 @@ class PendaftaranController extends Controller
         return view('layouts.daftar');
     }
 
-    public function showDaftar2 (Request $request){
-
-        return view('layouts.daftar2');
-    }
-
     public function daftar( Request $request){
 
         $validatedData = $request->validate([
-            'startDate' => 'required|date',
-            'endDate' => 'required|date|after_or_equal:check_in',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date',
             'metodePembayaran' => 'required|in:Tunai,Transfer BRI',
-            'totalPrice' => 'required|numeric'
         ],[
-            'startDate.required'=> 'Tanggal mulai program wajib diisi',
-            'endDate.required'=> 'Tanggal selesai program wajib diisi',
+            'tanggal_mulai.required'=> 'Tanggal mulai program wajib diisi',
+            'tanggal_selesai.required'=> 'Tanggal selesai program wajib diisi',
             'metodePembayaran.required'=> 'Metode pembayaran wajib diisi',
-            'totalPrice.required' => 'Pilih tanggal mulai dan selesai untuk menentukan total harga'
         ]); 
 
         $form1Data = $request->session()->get('form1_data');
@@ -145,6 +141,7 @@ class PendaftaranController extends Controller
             'agama' => $form1Data['agama'],
             'statusnikah' => $form1Data['statusNikah'],
             'pekerjaan' => $form1Data['pekerjaan'],
+            'riwayat_penyakit' => $form1Data['penyakit'],
             'hobi' => $form1Data['hobi'],
             'keahlian' => $form1Data['keahlian'],
             'bahasa' => $form1Data['bahasa'],
@@ -163,32 +160,51 @@ class PendaftaranController extends Controller
         }
             // Simpan data ke tabel pendaftaran
         $pendaftaran = new Pendaftaran([
-            'check_in' => $validatedData['startDate'],
-            'check_out' => $validatedData['endDate'],
+            'check_in' => $validatedData['tanggal_mulai'],
+            'check_out' => $validatedData['tanggal_selesai'],
             'metode_pembayaran' => $validatedData['metodePembayaran'],
-            'total_harga' => $validatedData['totalPrice'],
             'program_id' => $form1Data['program_id'],
             'data_peserta_id' => $dataPeserta->id,
         ]);
     
         $pendaftaran->save(); // Simpan data pendaftaran
-        
-        $request->session()->forget('form1_data'); // Clear session data
 
-        return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
+        // Buat entri Transaksi
+        $totalPrice = $request->input('summaryTotalPrice');
+        if (!isset($totalPrice)) {
+            // Handle the case where total price is missing
+            return back()->withErrors(['summaryTotalPrice' => 'Total harga tidak ditemukan']);
+          }
+        $transaksi = Transaksi::create([
+            'total_harga' => $totalPrice,
+            'pendaftaran_id' => $pendaftaran->id
+          ]);
+          
+
+        $transaksi->pendaftaran_id = $pendaftaran->id;
+        $transaksi->save(); // Simpan entri transaksi
+            
+            $request->session()->forget('form1_data'); // Clear session data
+
+            return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
+            }
         }
-    }
 
-    public function daftar2(){
+        public function showDaftar2 (Request $request){
+
+            return view('layouts.daftar2');
+        }
         
-    }
+        public function daftar2(){
+            
+        }
 
-    public function cancelRegistration(Request $request)
-    {
-        // Clear session data
-        $request->session()->forget('form1_data');
+        public function cancelRegistration(Request $request)
+        {
+            // Clear session data
+            $request->session()->forget('form1_data');
 
-        // Redirect to the first form or any other page
-        return redirect()->route('daftar')->with('status', 'Pendaftaran Dibatalkan');
-    }
+            // Redirect to the first form or any other page
+            return redirect()->route('daftar')->with('status', 'Pendaftaran Dibatalkan');
+        }
 }

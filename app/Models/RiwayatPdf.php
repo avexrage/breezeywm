@@ -5,24 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transaksi extends Model
+class RiwayatPdf extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaksi';
-    public $timestamps = false;
+    protected $table = 'riwayat_pdf';
     protected $fillable = [
-        'tanggal_transaksi',
-        'status_pembayaran',
-        'total_harga',
         'pendaftaran_id'
     ];
-    
+
     public function pendaftaran(){
         return $this->belongsTo(Pendaftaran::class);
-    }
-    
-    public function buktiTrnsk(){
-        return $this->hasOne(BuktiTrsk::class);
     }
 }

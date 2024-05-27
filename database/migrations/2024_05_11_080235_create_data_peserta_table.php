@@ -19,9 +19,11 @@ return new class extends Migration
             $table->enum('agama',['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']);
             $table->enum('statusnikah',['Belum Kawin', 'Kawin', 'Cerai Mati', 'Cerai Hidup']);
             $table->string('pekerjaan', 30);
+            $table->string('riwayat_penyakit', 50);
             $table->string('hobi', 30);
             $table->string('keahlian', 30);
             $table->string('bahasa', 30);
+            $table->enum('status_peserta',['Aktif','Tidak Aktif']);
             $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
 
         });

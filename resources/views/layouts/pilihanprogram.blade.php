@@ -10,7 +10,7 @@
         <div class="card-body">
           <h5 class="card-title">Day Care</h5>
           <p class="card-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos sunt illum, ad deleniti maxime pariatur tempore ipsa rem incidunt perferendis, exercitationem nobis voluptates itaque similique, eum animi delectus minima. Eius?</p>
-          <a href="{{ route('tampilform', ['id' => 11]) }}" id="daftarday" class="btn btn-success">Daftar Sekarang</a>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="111">Daftar Sekarang</button>
         </div>
       </div>
     </div>
@@ -19,12 +19,31 @@
         <div class="card-body">
           <h5 class="card-title">Grha Wredha Mulya</h5>
           <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis consequuntur, similique quibusdam cum possimus odio repudiandae illo sapiente saepe officiis, accusamus perferendis magnam sequi eligendi enim vitae pariatur corporis non?</p>
-          <a href="{{ route('tampilform', ['id' => 21]) }}" id="daftargrha" class="btn btn-success">Daftar Sekarang</a>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="21">Daftar Sekarang</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="confirmationModalLabel">Konfirmasi Pendaftaran</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              Apakah lansia yang akan anda daftarkan berusia minimal 60 tahun, masih mandiri, dan tidak sedang bed rest?
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="button" class="btn btn-success" id="modalConfirmButton">Ya, Daftarkan</button>
+          </div>
+      </div>
+  </div>
+</div>
+
 <section class="asuransi-section mb-5" id="asuransi">
     <div class="head-container">
         <div class="title text-center mb-5">Kami Menerima Segala Jenis Asuransi</div>
@@ -60,4 +79,25 @@
         </div>
     </div>
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var confirmButtons = document.querySelectorAll('[data-bs-target="#confirmationModal"]');
+    confirmButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var programId = this.getAttribute('data-id');
+            var modalConfirmButton = document.getElementById('modalConfirmButton');
+            console.log("Button clicked, programId:", programId);
+            modalConfirmButton.setAttribute('data-id', programId);
+        });
+    });
+
+    var modalConfirmButton = document.getElementById('modalConfirmButton');
+    modalConfirmButton.addEventListener('click', function() {
+        var programId = this.getAttribute('data-id');
+        console.log("Modal confirm button clicked, redirecting to:", "{{ route('tampilform') }}" + "?id=" + programId);
+        window.location.href = "{{ route('tampilform') }}" + "?id=" + programId;
+    });
+});
+
+</script>
 @endsection

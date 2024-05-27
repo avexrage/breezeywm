@@ -2,76 +2,125 @@
 @section('title', 'Daftar')
 @section('content4')
 
-<div class="container text-success">
+<div class="container">
     @include('layouts.pesan')
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center text-success">
         <h1 class="display-6">Daftar Program<br>Day Care</h1>
         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#cancelModal">
             <i class="bi bi-arrow-left"></i>
         </button>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Batalkan Pendaftaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Anda yakin mau membatalkan pendaftaran? Data yang sudah disimpan akan hilang.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="{{ route('cancel') }}" class="btn btn-danger">Ya, Batalkan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <!-- Pilih Hari Section -->
+    <!-- Form Pilih Hari -->
         <div class="col-lg-4 col-md-6">
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-body rounded text-success">
                     <p style="font-size: 30px;">Pilih Hari</p>
-                    <form name="myForm" id="form2" action="{{ route('daftarday') }}" method="POST">
+                    <form action="{{ route('daftarday') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="startDate" class="form-label">Tanggal Mulai</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 month')) }}">
+                            <label class="form-label" for="tanggal_mulai">Tanggal Mulai:</label>
+                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
                         </div>
                         <div class="mb-3">
-                            <label for="endDate" class="form-label">Tanggal Selesai</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+2 month')) }}">
+                            <label class="form-label" for="tanggal_selesai">Tanggal Selesai:</label>
+                            <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
                         </div>
-                        <input type="hidden" id="totalPrice" name="totalPrice" value="">
+                        <div id="programs">
+                            <!-- Program selections will be dynamically added here -->
+                        </div>
                         <div class="mb-3">
-                            <label for="metodePembayaran" class="form-label">Metode Pembayaran</label>
-                            <select class="form-control" id="metodePembayaran" name="metodePembayaran">
+                            <label class="form-label" for="metodePembayaran">Metode Pembayaran</label>
+                            <select class="form-control" id="metodePembayaran" name="metodePembayaran" required>
                                 <option value="" disabled selected>Pilih Pembayaran</option>
                                 <option value="Tunai">Tunai</option>
                                 <option value="Transfer BRI">Transfer BRI</option>
                             </select>
                         </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-10 offset-sm-2 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-success" name="submit">DAFTAR</button>
-                            </div>
-                            {{-- data-bs-toggle="modal" data-bs-target="#confirmModal"  --}}
-                        </div>
+                        <input type="text" id="summaryTotalPriceInput" name="summaryTotalPrice">
+                        <button type="submit" class="btn btn-success" >Daftar</button>
                     </form>
                 </div>
             </div>
         </div>
-
-        <!-- Daftar Harga Section -->
-        <div class="col-lg-6 offset-lg-2">
-            <div style="font-size: 30px;">Daftar Harga</div>
+    <!-- Daftar Harga -->
+        <div class="col-lg-7 offset-lg-1 text-success">
+            <div class="mt-3" style="font-size: 30px;">Daftar Harga</div>
             <div class="card">
                 <div class="card-body rounded bg-success text-white">
                     <div class="row">
                         <div class="col-8">
-                            <p style="font-size: 20px; font-weight: 100;">Senin - Jum'at</p>
+                            <p style="font-size: 20px; font-weight: bold;">Senin - Jum'at</p>
                         </div>
                         <div class="col-4">
-                            <p style="font-size: 20px; font-weight: 100;">Rp. 40.000/hari</p>
+                            <p style="font-size: 20px; font-weight: bold;">Harga Harian</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <p style="font-size: 20px; font-weight: 100;">Sabtu - Minggu</p>
+                            <p style="font-size: 20px; font-weight: 100;">Pagi (08.00-16.00) / Sore (16.00-21.00)</p>
                         </div>
                         <div class="col-4">
-                            <p style="font-size: 20px; font-weight: 100;">Rp. 50.000/hari</p>
+                            <p style="font-size: 20px; font-weight: 100;">Rp. 40.000</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (08.00-21.00)</p>
+                            <hr style="border: 0; border-top: 2px solid #ffffff;">
+                        </div>
+                        <div class="col-4">
+                            <p style="font-size: 20px; font-weight: 100;">Rp. 80.000</p>
+                            <hr style="border: 0; border-top: 2px solid #ffffff;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <p style="font-size: 20px; font-weight: bold;">Sabtu - Minggu</p>
+                        </div>
+                        <div class="col-4">
+                            <p style="font-size: 20px; font-weight: bold;">Harga Harian</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <p style="font-size: 20px; font-weight: 100;">Pagi (08.00-16.00) / Sore (16.00-21.00)</p>
+                        </div>
+                        <div class="col-4">
+                            <p style="font-size: 20px; font-weight: 100;">Rp. 50.000</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (08.00-21.00)</p>
+                        </div>
+                        <div class="col-4">
+                            <p style="font-size: 20px; font-weight: 100;">Rp. 100.000</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Ringkasan Pembayaran Section -->
     <div id="summary" class="my-3">
         <div class="card">
@@ -88,9 +137,12 @@
                         <td scope="row" class="text-success">Tanggal Berakhir Program</td>
                         <td id="summaryEndDate"></td>
                     </tr>
+                    <!-- Ubah bagian ini untuk menampilkan Detail Pilihan Program -->
                     <tr>
-                        <td scope="row" class="text-success">Lama Program</td>
-                        <td id="summaryDuration"></td>
+                        <td scope="row" class="text-success">Detail Pilihan Program</td>
+                        <td id="summaryProgram">
+                            <ul id="selectedProgramsList"></ul> <!-- Menambahkan daftar pilihan program sebagai daftar terurut -->
+                        </td>
                     </tr>
                     <tr>
                         <td scope="row" class="text-success">Biaya</td>
@@ -104,115 +156,182 @@
                     </tr>
                     <tr>
                         <td scope="row" class="text-success"><strong>Total Harga</strong></td>
-                        <td id="summaryTotalPrice"></td>
+                        <td id="summaryTotalPrice" name="summaryTotalPrice"></td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
+    
 </div>
-   <!-- Modal -->
-<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cancelModalLabel">Batalkan Pendaftaran</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Anda yakin mau membatalkan pendaftaran? Data yang sudah disimpan akan hilang.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="{{ route('cancel') }}" class="btn btn-danger">Yes, Cancel</a>
-            </div>
-        </div>
-    </div>
 </div>
+<script>
+// Initialize the min and max dates for tanggal_mulai
+const today = new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" });
+const todayDate = new Date(today);
+const maxMulaiDate = new Date(todayDate);
+maxMulaiDate.setDate(maxMulaiDate.getDate() + 7);
 
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Pendaftaran</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Data pendaftaran program sudah benar? Silahkan cek kembali data anda.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" onclick="submitForm()">Yes, Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
+document.getElementById('tanggal_mulai').min = formatDateForInput(todayDate);
+document.getElementById('tanggal_mulai').max = formatDateForInput(maxMulaiDate);
 
+// Set initial max date for tanggal_selesai
+const tanggalMulai = document.getElementById('tanggal_mulai').value;
+const tanggalMulaiDate = new Date(tanggalMulai);
+const initialMaxSelesaiDate = new Date(tanggalMulaiDate);
+initialMaxSelesaiDate.setDate(initialMaxSelesaiDate.getDate() + 7);
 
- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput = document.getElementById('endDate');
-    const paymentMethodSelect = document.getElementById('metodePembayaran');
-    const summaryStartDate = document.getElementById('summaryStartDate');
-    const summaryEndDate = document.getElementById('summaryEndDate');
-    const summaryDuration = document.getElementById('summaryDuration');
-    const summaryTotalPrice = document.getElementById('summaryTotalPrice');
-    const summaryCostDetails = document.getElementById('summaryCostDetails');
-    const paymentMethodDisplay = document.getElementById('paymentMethod');
-    const totalPriceInput = document.getElementById('totalPrice');
+document.getElementById('tanggal_selesai').max = formatDateForInput(initialMaxSelesaiDate);
 
-    function updateSummary() {
-        const startDate = new Date(startDateInput.value);
-        const endDate = new Date(endDateInput.value);
+// Event listener for tanggal_mulai to update tanggal_selesai
+document.getElementById('tanggal_mulai').addEventListener('change', function() {
+    // Set tanggal selesai minimal sama dengan tanggal mulai dan maksimal 1 minggu setelah tanggal mulai
+    const selectedMulaiDate = new Date(this.value);
+    const minSelesaiDate = new Date(selectedMulaiDate);
+    const maxSelesaiDate = new Date(selectedMulaiDate);
+    maxSelesaiDate.setDate(selectedMulaiDate.getDate() + 7);
 
-        if (startDate && endDate && startDate <= endDate) {
-            summaryStartDate.textContent = `: ${startDate.toLocaleDateString('id-ID')}`;
-            summaryEndDate.textContent = `: ${endDate.toLocaleDateString('id-ID')}`;
+    // Update min and max attributes of tanggal_selesai
+    document.getElementById('tanggal_selesai').min = formatDateForInput(selectedMulaiDate);
+    document.getElementById('tanggal_selesai').max = formatDateForInput(maxSelesaiDate);
 
-            const timeDiff = endDate - startDate;
-            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
-            summaryDuration.textContent = `: ${daysDiff} hari`;
-
-            let totalPrice = 0;
-            summaryCostDetails.innerHTML = '';
-            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                const dayOfWeek = d.getDay();
-                const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-                const dayString = d.toLocaleDateString('id-ID');
-                let cost = (dayOfWeek === 0 || dayOfWeek === 6) ? 50000 : 40000;
-                summaryCostDetails.innerHTML += `<li>${dayString} (${dayNames[dayOfWeek]}): Rp. ${cost.toLocaleString('id-ID')}</li>`;
-                totalPrice += cost;
-            }
-            summaryTotalPrice.textContent = `: Rp. ${totalPrice.toLocaleString('id-ID')}`;
-            totalPriceInput.value = totalPrice; // Set total price in hidden input
-        } else {
-            summaryStartDate.textContent = ': -';
-            summaryEndDate.textContent = ': -';
-            summaryDuration.textContent = ': -';
-            summaryTotalPrice.textContent = ': -';
-            summaryCostDetails.innerHTML = '';
-            totalPriceInput.value = ''; // Clear total price in hidden input
-            paymentMethodDisplay.textContent = ': -';
-        }
-
-        // Memperbarui tampilan metode pembayaran
-        if (paymentMethodSelect.value) {
-            const paymentMethodText = paymentMethodSelect.options[paymentMethodSelect.selectedIndex].text;
-            paymentMethodDisplay.textContent = `: ${paymentMethodText}`;
-        } else {
-            paymentMethodDisplay.textContent = ': -';
-        }
+    // Reset tanggal_selesai value if it's less than the new minimum date or greater than the new maximum date
+    const selectedSelesaiDate = new Date(document.getElementById('tanggal_selesai').value);
+    if (selectedSelesaiDate < selectedMulaiDate || selectedSelesaiDate > maxSelesaiDate) {
+        document.getElementById('tanggal_selesai').value = formatDateForInput(selectedMulaiDate);
     }
 
-    startDateInput.addEventListener('change', updateSummary);
-    endDateInput.addEventListener('change', updateSummary);
-    paymentMethodSelect.addEventListener('change', updateSummary);
+    // Update program options
+    updateProgramOptions();
 });
 
-</script>
+// Add event listener for tanggal_selesai
+document.getElementById('tanggal_selesai').addEventListener('change', updateProgramOptions);
 
-<script>
+// Add event listener for metodePembayaran to update summary
+document.getElementById('metodePembayaran').addEventListener('change', updateSummary);
+
+// Function to format date as DD-MM-YYYY
+function formatDateForInput(date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+// Function to update program options based on selected dates
+function updateProgramOptions() {
+    const tanggalMulaiInput = document.getElementById('tanggal_mulai');
+    const tanggalSelesaiInput = document.getElementById('tanggal_selesai');
+    const programsDiv = document.getElementById('programs');
+    const daysInIndonesian = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+    if (tanggalMulaiInput.value && tanggalSelesaiInput.value) {
+        const tanggalMulai = new Date(tanggalMulaiInput.value);
+        const tanggalSelesai = new Date(tanggalSelesaiInput.value);
+        programsDiv.innerHTML = '';
+
+        if (!isNaN(tanggalMulai) && !isNaN(tanggalSelesai) && tanggalMulai <= tanggalSelesai) {
+            let currentDate = new Date(tanggalMulai);
+            while (currentDate <= tanggalSelesai) {
+                const day = ('0' + currentDate.getDate()).slice(-2);
+                const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                const year = currentDate.getFullYear();
+                const currentDateString = `${day}-${month}-${year}`;
+                const currentDayIndex = currentDate.getDay();
+                const currentDay = daysInIndonesian[currentDayIndex];
+                const programOption = document.createElement('div');
+                programOption.classList.add('mb-3');
+                const label = document.createElement('label');
+                label.classList.add('form-label');
+                label.textContent = `Pilih waktu untuk hari ${currentDay}, ${currentDateString}:`;
+                programOption.appendChild(label);
+                const select = document.createElement('select');
+                select.classList.add('form-control');
+                select.name = `programs[${currentDateString}]`;
+                select.required = true;
+                select.dataset.date = currentDateString;
+                addProgramOptions(select, currentDate);
+                programOption.appendChild(select);
+                programsDiv.appendChild(programOption);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
+    }
+}
+
+// Function to add program options to the dropdown
+function addProgramOptions(select, currentDate) {
+    const dayOfWeek = currentDate.getUTCDay();
+    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // 0 = Minggu, 6 = Sabtu
+
+    const options = [
+        { value: 'pagi', text: 'Pagi', harga: isWeekend ? 50000 : 40000 },
+        { value: 'sore', text: 'Sore', harga: isWeekend ? 50000 : 40000 },
+        { value: 'full_day', text: 'Full Day', harga: isWeekend ? 100000 : 80000 }
+    ];
+
+    options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = `${opt.text} - Rp ${opt.harga.toLocaleString()}`;
+        option.dataset.harga = opt.harga; // store harga in data attribute
+        select.appendChild(option);
+    });
+}
+
+// Function to update the summary section
+function updateSummary() {
+    const tanggalMulai = document.getElementById('tanggal_mulai').value;
+    const tanggalSelesai = document.getElementById('tanggal_selesai').value;
+    const metodePembayaran = document.getElementById('metodePembayaran').value;
+
+    document.getElementById('summaryStartDate').textContent = tanggalMulai;
+    document.getElementById('summaryEndDate').textContent = tanggalSelesai;
+    document.getElementById('paymentMethod').textContent = metodePembayaran;
+
+    // Update selected programs
+    const selectedProgramsList = document.getElementById('selectedProgramsList');
+    const summaryCostDetails = document.getElementById('summaryCostDetails');
+    selectedProgramsList.innerHTML = '';
+    summaryCostDetails.innerHTML = '';
+
+    const programSelects = document.querySelectorAll('#programs select');
+    let totalPrice = 0;
+    programSelects.forEach(select => {
+        const selectedOption = select.options[select.selectedIndex];
+        const date = select.dataset.date;
+        const programText = selectedOption.textContent.split(' - ')[0];
+        const harga = parseInt(selectedOption.dataset.harga);
+
+        const li = document.createElement('li');
+        li.textContent = `${date}: ${programText}`;
+        selectedProgramsList.appendChild(li);
+
+        const costLi = document.createElement('li');
+        costLi.textContent = `${date}: Rp ${harga.toLocaleString()}`;
+        summaryCostDetails.appendChild(costLi);
+
+        totalPrice += harga;
+    });
+
+    document.getElementById('summaryTotalPrice').textContent = `Rp ${totalPrice.toLocaleString()}`;
+    document.getElementById('summaryTotalPriceInput').value = totalPrice; // Update hidden input value
+}
+
+// Add event listeners to update summary when a program is selected
+document.getElementById('programs').addEventListener('change', updateSummary);
+
+// Initial call to update summary in case the form is pre-filled
+updateSummary();
+
 
 </script>
 @endsection

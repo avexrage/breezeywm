@@ -125,6 +125,12 @@
         </div>
     </div>
     <div class="mb-3 row">
+        <label for="penyakit" class="col-sm-2 col-form-label">Riwayat Penyakit</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name='penyakit' value="{{ Session::get('riwayat_penyakit') }}" id="penyakit" style="text-transform: capitalize;">
+        </div>
+    </div>
+    <div class="mb-3 row">
         <label for="asuransi" class="col-sm-2 col-form-label">Nama Asuransi Kesehatan</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" name='asuransi' value="{{ Session::get('nama_asuransi') }}" id="asuransi" style="text-transform: capitalize;">

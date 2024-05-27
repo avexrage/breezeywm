@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('check_in')->default(null); 
             $table->date('check_out')->default(null); 
             $table->enum('metode_pembayaran',['Tunai', 'Transfer BRI']);
+            $table->enum('status_pendaftaran',['Baru', 'Ditolak', 'Diterima', 'Menunggu Jadwal', 'Dibatalkan']);
             $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
             $table->string('program_id', 5);
             $table->foreign('program_id')->references('id_program')->on('program')->onDelete('cascade');

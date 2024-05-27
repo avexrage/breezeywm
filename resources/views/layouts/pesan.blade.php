@@ -4,6 +4,12 @@
 </div>
 @endif
 
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
+
  @if ($errors->any())
  <div class="pt-1">
      <div class="alert alert-danger">
@@ -20,10 +26,4 @@
     <div class="alert alert-success">
         {{ session('verified') }}
     </div>
-@endif
-
-@if(session('status'))
-<div class="alert alert-warning" role="alert">
-    {{ session('status') }}
-</div>
 @endif

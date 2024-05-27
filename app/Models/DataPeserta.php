@@ -10,7 +10,7 @@ class DataPeserta extends Model
     use HasFactory;
 
     protected $fillable = ['ktp', 'nama_lengkap_peserta', 'alamat', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
-    'agama', 'statusnikah', 'pekerjaan', 'hobi', 'keahlian', 'bahasa', 'user_id'];
+    'agama', 'statusnikah', 'pekerjaan', 'riwayat_penyakit', 'hobi', 'keahlian', 'bahasa', 'user_id'];
 
     protected $table = 'data_peserta';
 
@@ -26,5 +26,9 @@ class DataPeserta extends Model
 
     public function pendaftaran(){
         return $this->hasOne(Pendaftaran::class);
+    }
+
+    public function video(){
+        return $this->hasOne(Video::class);
     }
 }

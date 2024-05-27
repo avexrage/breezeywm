@@ -30,4 +30,8 @@ class Pendaftaran extends Model
     public function transaksi(){
         return $this->hasOne(Transaksi::class);
     }
+
+    public function riywayatPdf(){
+        return $this->hasOne(RiwayatPdf::class);
+    }
 }

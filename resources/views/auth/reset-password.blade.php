@@ -1,39 +1,46 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('password.store') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Reset Password | Yayasan Wredha Mulya</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
+</head> 
+    <body>
+        <div class="d-flex align-items-center justify-content-center vh-100">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        @include('layouts.pesan')
+                        <form method="POST" action="{{ route('password.update') }}">
+                            @csrf
+                            <input type="hidden" name="token" value="{{ request()->token }}">
+                            <input type="hidden" name="email" value="{{ request()->email }}">
+                            <div class="my-3">
+                                <label for="password" class="form-label">{{ __('Masukkan Password Baru:') }}</label>
+                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" required autocomplete="new-password">
 
-        <!-- Password Reset Token -->
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="password-confirm" class="form-label">{{ __('Konfirmasi Password:') }}</label>
+                                <input type="password" name="password_confirmation" class="form-control" id="password-confirm" required autocomplete="new-password">
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success">
+                                    {{ __('Ubah Password') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                type="password"
-                                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Reset Password') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+</body>
+</html>

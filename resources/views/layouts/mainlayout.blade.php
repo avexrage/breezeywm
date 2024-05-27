@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yayasan Wredha Mulya | @yield('title')</title>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-wEgFhORCsQzMFwJxWv4CqzlGOxmokeH5zTKhIQXlCd4S7jQzxyOwYLf+fk2zQ2N7" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -15,7 +14,7 @@
   <nav class="navbar navbar-expand-lg bg-body-light fixed-top navbar-white shadow-sm">
     <div class="container-fluid">
         <a><img src="{{ asset('images/ywm.jpg') }}" alt="Yayasan Wredha Mulya Logo" width="70" height="64" class="me-auto"></a>
-        <a class="navbar-brand navbar-brand-vertical text-success custom-margin" href="/#beranda">
+        <a class="navbar-brand navbar-brand-vertical text-success custom-margin" href="{{ route('home') }}">
             <span class="brand-top">Yayasan</span>
             <span class="brand-bottom">Wredha Mulya</span>
         </a>
@@ -63,7 +62,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Confirm Logout</h5>
+          <h5 class="modal-title">Konfirmasi Logout</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -78,7 +77,7 @@
   </div>
   
 <div id="main-content" class="pt-5 mt-5">
-    @yield('content1')
+    @yield('content1') 
     @yield('content2')
     @yield('content3')
     @yield('content4')
@@ -117,8 +116,7 @@
     </footer>
   </div>
 </section>
-<script src="{{ asset('js/custom.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+<script src="{{ asset('js/custom.js') }}"></script>
 </body>
 </html>

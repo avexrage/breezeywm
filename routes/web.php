@@ -1,11 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SesiController;
-use App\Http\Controllers\PendaftaranController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PembayaranController;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SesiController;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PendaftaranController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -30,14 +34,56 @@ Route::get('/admin', function () {
 });
 
 //LOGIN LOGOUT
-Route::get('/sesi', [SesiController::class, 'showLoginForm'])->name('login');
-Route::post('/sesi/login', [SesiController::class, 'actionLogin'])->name('actionlogin');
-
-Route::get('/sesi/logout', [SesiController::class, 'actionLogout'])->name('actionlogout');
+Route::get('/auth', [SesiController::class, 'showLoginForm'])->name('login');
+Route::post('/auth/login', [SesiController::class, 'actionLogin'])->name('actionlogin');
+Route::get('/auth/logout', [SesiController::class, 'actionLogout'])->name('actionlogout');
 
 //REGISTER
-Route::get('/sesi/register', [SesiController::class, 'showRegisterForm'])->name('register');
-Route::post('/sesi/register/form', [SesiController::class, 'actionRegister'])->name('actionregister');
+Route::get('/auth/register', [SesiController::class, 'showRegisterForm'])->name('register');
+Route::post('/auth/register/form', [SesiController::class, 'actionRegister'])->name('actionregister');
+
+//FORGOT PASSWORD
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+ 
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+ 
+    return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => __($status)])
+                : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:6|confirmed',
+    ]);
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function ($user, $password) {
+            $user->forceFill([
+                'password' => Hash::make($password)
+            ])->setRememberToken(Str::random(60));
+ 
+            $user->save();
+ 
+            event(new PasswordReset($user));
+        }
+    );
+ 
+    return $status === Password::PASSWORD_RESET
+                ? redirect()->route('login')->with('status', __($status))
+                : back()->withErrors(['email' => [__($status)]]);
+})->middleware('guest')->name('password.update');
 
 //Email Verification
 Route::get('/email', function () {
@@ -57,23 +103,27 @@ Route::post('/email', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 //HOME
-Route::get('/', [HomeController::class, 'landingPage'])->middleware(['auth', 'verified'])->name('home');
+Route::get('/', [HomeController::class, 'landingPage'])->name('home');
 
 //PENDAFTARAN
 Route::get('/pilihan-program', function (){
     return view('layouts.pilihanprogram');
 })->name('daftar');
 
+//cekview
+Route::get('/test', function (){
+    return view('test');
+});
 
 //FORM
-Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['IsLogin']);
+Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
 Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
 Route::post('/daftar/daycare', [PendaftaranController::class, 'daftar'])->name('daftarday');
 
 Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
-Route::post('/daftar/grhawredha', [PendaftaranController::class, 'daftar2'])->name('daftargrha');
+Route::post('/daftar/grha/video', [PendaftaranController::class, 'daftar2'])->name('daftargrha');
 
 Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->name('cancel');
 
