@@ -85,7 +85,7 @@
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (Full Day) (08.00-21.00)</p>
+                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore(Full Day) (08.00-21.00)</p>
                             <hr style="border: 0; border-top: 2px solid #ffffff;">
                         </div>
                         <div class="col-4">

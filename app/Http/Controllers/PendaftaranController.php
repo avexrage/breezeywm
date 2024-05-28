@@ -172,8 +172,17 @@ class PendaftaranController extends Controller
         $pendaftaran->save(); // Simpan data pendaftaran
 
         foreach ($validatedData['programs'] as $date => $programId) {
-            $pendaftaran->program()->attach($programId, ['tanggal' => $date]);
+            // Ambil data program berdasarkan ID
+            $program = Program::findOrFail($programId);
+        
+            // Simpan relasi many-to-many antara pendaftaran dan program
+            $pendaftaran->program()->attach($programId, [
+                'tanggal' => $date,
+                'tipe' => $program->tipe, // Tambahkan 'tipe' dari data program
+                'harga' => $program->harga, // Tambahkan 'harga' dari data program
+            ]);
         }
+        
 
         // Buat entri Transaksi
         $totalPrice = $request->input('summaryTotalPrice');
