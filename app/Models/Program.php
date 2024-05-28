@@ -11,8 +11,16 @@ class Program extends Model
 
     protected $table = 'program';
     protected $primaryKey = 'id_program';
+    protected $fillable = [
+        'id_program',
+        'nama_program',
+        'tipe',
+        'harga',
+    ];
 
     public function pendaftaran(){
-        return $this->hasOne(Pendaftaran::class);
+        return $this->belongsToMany(Pendaftaran::class, 'detail_pendaftaran', 'program_id', 'pendaftaran_id')
+                    ->withPivot('tanggal', 'tipe', 'harga')
+                    ->withTimestamps();
     }
 }

@@ -85,7 +85,7 @@
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (08.00-21.00)</p>
+                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (Full Day) (08.00-21.00)</p>
                             <hr style="border: 0; border-top: 2px solid #ffffff;">
                         </div>
                         <div class="col-4">
@@ -111,7 +111,7 @@
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (08.00-21.00)</p>
+                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (Full Day) (08.00-21.00)</p>
                         </div>
                         <div class="col-4">
                             <p style="font-size: 20px; font-weight: 100;">Rp. 100.000</p>
@@ -226,6 +226,38 @@ function formatDateForInput(date) {
     return [year, month, day].join('-');
 }
 
+// Data program dari database
+const programData = [
+    { id: '111', nama: 'Day Care', tipe: 'pagi', harga: 40000 },
+    { id: '112', nama: 'Day Care', tipe: 'sore', harga: 40000 },
+    { id: '113', nama: 'Day Care', tipe: 'full_day', harga: 80000 },
+    { id: '121', nama: 'Day Care', tipe: 'pagi', harga: 50000 },
+    { id: '122', nama: 'Day Care', tipe: 'sore', harga: 50000 },
+    { id: '123', nama: 'Day Care', tipe: 'full_day', harga: 100000 }
+];
+
+// Function to add program options to the dropdown
+function addProgramOptions(select, currentDate) {
+    const dayOfWeek = currentDate.getUTCDay();
+    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // 0 = Minggu, 6 = Sabtu
+
+    // Filter data based on weekend or weekday
+    const filteredProgramData = programData.filter(program => {
+        if (program.harga === 40000 || program.harga === 80000) {
+            return !isWeekend;
+        }
+        return isWeekend;
+    });
+
+    filteredProgramData.forEach(program => {
+        const option = document.createElement('option');
+        option.value = program.id;
+        option.textContent = `${program.nama} ${program.tipe} - Rp ${program.harga.toLocaleString()}`;
+        option.dataset.harga = program.harga; // store harga in data attribute
+        select.appendChild(option);
+    });
+}
+
 // Function to update program options based on selected dates
 function updateProgramOptions() {
     const tanggalMulaiInput = document.getElementById('tanggal_mulai');
@@ -244,14 +276,14 @@ function updateProgramOptions() {
                 const day = ('0' + currentDate.getDate()).slice(-2);
                 const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
                 const year = currentDate.getFullYear();
-                const currentDateString = `${day}-${month}-${year}`;
+                const currentDateString = `${year}-${month}-${day}`;
                 const currentDayIndex = currentDate.getDay();
                 const currentDay = daysInIndonesian[currentDayIndex];
                 const programOption = document.createElement('div');
                 programOption.classList.add('mb-3');
                 const label = document.createElement('label');
                 label.classList.add('form-label');
-                label.textContent = `Pilih waktu untuk hari ${currentDay}, ${currentDateString}:`;
+                label.textContent = `Pilih program untuk hari ${currentDay}, ${currentDateString}:`;
                 programOption.appendChild(label);
                 const select = document.createElement('select');
                 select.classList.add('form-control');
@@ -265,26 +297,6 @@ function updateProgramOptions() {
             }
         }
     }
-}
-
-// Function to add program options to the dropdown
-function addProgramOptions(select, currentDate) {
-    const dayOfWeek = currentDate.getUTCDay();
-    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // 0 = Minggu, 6 = Sabtu
-
-    const options = [
-        { value: 'pagi', text: 'Pagi', harga: isWeekend ? 50000 : 40000 },
-        { value: 'sore', text: 'Sore', harga: isWeekend ? 50000 : 40000 },
-        { value: 'full_day', text: 'Full Day', harga: isWeekend ? 100000 : 80000 }
-    ];
-
-    options.forEach(opt => {
-        const option = document.createElement('option');
-        option.value = opt.value;
-        option.textContent = `${opt.text} - Rp ${opt.harga.toLocaleString()}`;
-        option.dataset.harga = opt.harga; // store harga in data attribute
-        select.appendChild(option);
-    });
 }
 
 // Function to update the summary section

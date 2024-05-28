@@ -120,10 +120,13 @@ class PendaftaranController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
             'metodePembayaran' => 'required|in:Tunai,Transfer BRI',
+            'programs' => 'required|array',
+            'programs.*' => 'required|string|exists:program,id_program'
         ],[
             'tanggal_mulai.required'=> 'Tanggal mulai program wajib diisi',
             'tanggal_selesai.required'=> 'Tanggal selesai program wajib diisi',
             'metodePembayaran.required'=> 'Metode pembayaran wajib diisi',
+            'programs.required' => 'Pilih program yang ada.'
         ]); 
 
         $form1Data = $request->session()->get('form1_data');
@@ -163,18 +166,21 @@ class PendaftaranController extends Controller
             'check_in' => $validatedData['tanggal_mulai'],
             'check_out' => $validatedData['tanggal_selesai'],
             'metode_pembayaran' => $validatedData['metodePembayaran'],
-            'program_id' => $form1Data['program_id'],
             'data_peserta_id' => $dataPeserta->id,
         ]);
     
         $pendaftaran->save(); // Simpan data pendaftaran
 
+        foreach ($validatedData['programs'] as $date => $programId) {
+            $pendaftaran->program()->attach($programId, ['tanggal' => $date]);
+        }
+
         // Buat entri Transaksi
         $totalPrice = $request->input('summaryTotalPrice');
         if (!isset($totalPrice)) {
-            // Handle the case where total price is missing
             return back()->withErrors(['summaryTotalPrice' => 'Total harga tidak ditemukan']);
           }
+          
         $transaksi = Transaksi::create([
             'total_harga' => $totalPrice,
             'pendaftaran_id' => $pendaftaran->id

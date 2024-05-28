@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('transaksi', function (Blueprint $table) {
+        Schema::create('detail_pendaftaran', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('tanggal_transaksi')->default(null);
-            $table->enum('status_pembayaran',['Belum Lunas', 'Lunas']);
-            $table->integer('total_harga');
             $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
+            $table->string('program_id', 5);
+            $table->foreign('program_id')->references('id_program')->on('program')->onDelete('cascade');
+            $table->date('tanggal'); // Tanggal program dipilih
+            $table->string('tipe', 15);
+            $table->integer('harga'); 
+            $table->timestamps();
         });
     }
 
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transaksi');
+        Schema::dropIfExists('detail_pendaftaran');
     }
 };
