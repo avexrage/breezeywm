@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('tanggal_transaksi')->default(null);
-            $table->enum('status_pembayaran',['Belum Lunas', 'Lunas']);
+            $table->dateTime('tanggal_transaksi')->nullable();
+            $table->enum('status_pembayaran',['Belum Lunas', 'Lunas'])->default('Belum Lunas');
             $table->integer('total_harga');
             $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
+            $table->timestamps(); // Tambahkan kolom timestamps
         });
     }
 

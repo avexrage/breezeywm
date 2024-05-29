@@ -19,11 +19,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->string('nama');
             $table->string('no_hp', 13);
             $table->string('alamat')->nullable();
             $table->string('pekerjaan')->nullable();
-            $table->enum('role', ['admin', 'user'])->nullable();
+            $table->enum('role', ['admin', 'user'])->default('user');
             $table->timestamps();
         });
     }

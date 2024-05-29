@@ -18,6 +18,6 @@ class BuktiTrsk extends Model
     ];
 
     public function transaksi(){
-        return $this->belongsTo(Transaksi::class, 'transaksi_id', 'id');
+        return $this->belongsTo(Transaksi::class, 'transaksi_id');
     }
 }

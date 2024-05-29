@@ -10,7 +10,6 @@ class Pendaftaran extends Model
     use HasFactory;
 
     protected $table = 'pendaftaran';
-    public $timestamps = false;
     protected $fillable = [
         'check_in',
         'check_out',
@@ -21,7 +20,7 @@ class Pendaftaran extends Model
 
     public function program(){
         return $this->belongsToMany(Program::class, 'detail_pendaftaran', 'pendaftaran_id', 'program_id')
-                    ->withPivot('tanggal')
+                    ->withPivot('tanggal', 'tipe', 'harga')
                     ->withTimestamps();
     }
 

@@ -6,12 +6,13 @@
     @include('layouts.pesan')
     <div class="d-flex justify-content-between align-items-center text-success">
         <h1 class="display-6">Daftar Program<br>Day Care</h1>
-        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#cancelModal">
+        <button class="btn btn-secondary" onclick="goBack()">
             <i class="bi bi-arrow-left"></i>
         </button>
     </div>
+    
     <!-- Modal -->
-    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -27,7 +28,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="row">
     <!-- Form Pilih Hari -->
@@ -56,7 +57,7 @@
                                 <option value="Transfer BRI">Transfer BRI</option>
                             </select>
                         </div>
-                        <input type="text" id="summaryTotalPriceInput" name="summaryTotalPrice">
+                        <input type="hidden" id="summaryTotalPriceInput" name="summaryTotalPrice">
                         <button type="submit" class="btn btn-success" >Daftar</button>
                     </form>
                 </div>
@@ -85,7 +86,7 @@
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore(Full Day) (08.00-21.00)</p>
+                            <p style="font-size: 20px; font-weight: 100;">Pagi - Sore (Full Day) (08.00-21.00)</p>
                             <hr style="border: 0; border-top: 2px solid #ffffff;">
                         </div>
                         <div class="col-4">
@@ -161,9 +162,7 @@
                 </table>
             </div>
         </div>
-    </div>
-    
-</div>
+    </div> 
 </div>
 <script>
 // Initialize the min and max dates for tanggal_mulai
@@ -344,6 +343,8 @@ document.getElementById('programs').addEventListener('change', updateSummary);
 // Initial call to update summary in case the form is pre-filled
 updateSummary();
 
-
+function goBack() {
+        window.history.back();
+    }
 </script>
 @endsection

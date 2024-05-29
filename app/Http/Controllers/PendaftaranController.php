@@ -174,12 +174,12 @@ class PendaftaranController extends Controller
         foreach ($validatedData['programs'] as $date => $programId) {
             // Ambil data program berdasarkan ID
             $program = Program::findOrFail($programId);
-        
+
             // Simpan relasi many-to-many antara pendaftaran dan program
             $pendaftaran->program()->attach($programId, [
                 'tanggal' => $date,
-                'tipe' => $program->tipe, // Tambahkan 'tipe' dari data program
-                'harga' => $program->harga, // Tambahkan 'harga' dari data program
+                'tipe' => $program->tipe, 
+                'harga' => $program->harga, 
             ]);
         }
         

@@ -13,7 +13,7 @@
                 Verifikasi Email Anda
             </div>
             <div class="card-body mt-3">
-                <p>Email Sudah dikirim ke email anda. Cek email dan klik tombol Verifikasi Email</p>
+                <p>Email Sudah dikirim ke email anda. Cek email dan klik tombol Verifikasi Email, jika tidak muncul klik kirim ulang email</p>
                 <form action="{{ route('verification.send') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-link">Kirim Ulang Email Verifikasi</button>

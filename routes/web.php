@@ -105,7 +105,7 @@ Route::post('/email', function (Request $request) {
 //HOME
 Route::get('/', [HomeController::class, 'landingPage'])->name('home');
 
-//PENDAFTARAN
+//NAVBAR PENDAFTARAN
 Route::get('/pilihan-program', function (){
     return view('layouts.pilihanprogram');
 })->name('daftar');
@@ -115,8 +115,8 @@ Route::get('/test', function (){
     return view('test');
 });
 
-//FORM
-Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);
+//FORM PENDAFTARAN
+Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);        
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
 Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
@@ -129,3 +129,7 @@ Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->nam
 
 //Pembayaran
 Route::get('/pembayaran/daycare', [PembayaranController::class, 'bayarday'])->name('bayarday');
+Route::get('/cetak-bukti-pendaftaran/{id}', [PembayaranController::class, 'cetakBuktiPendaftaran'])->name('cetakBuktiPendaftaran');
+Route::post('/upload-bukti-pembayaran/{id}', [PembayaranController::class, 'uploadBuktiPembayaran'])->name('uploadBuktiPembayaran');
+
+Route::get('/cetak-pdf/{id}', [PembayaranController::class, 'cetakBuktiPendaftaran'])->name('cetak-pdf');

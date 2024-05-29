@@ -23,7 +23,7 @@
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
                         <div class="mb-3">
-                            <label class="text-center">Silahkan masukkan alamat email anda pada form dibawah. Jika email terdaftar, maka kami akan mengirimkan email untuk mereset password anda. Setelah klik tombol, silahkan cek email anda</label>
+                            <label class="text-center">Silahkan masukkan alamat email anda. Jika email terdaftar, maka kami akan mengirimkan email untuk mereset password anda. Setelah klik tombol kirim, silahkan cek email anda dan klik tombol reset password</label>
                             <label for="email" class="form-label">{{ __('Masukkan Email:') }}</label>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                             @error('email')
