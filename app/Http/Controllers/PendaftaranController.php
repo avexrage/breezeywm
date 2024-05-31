@@ -36,6 +36,7 @@ class PendaftaranController extends Controller
             if (!$program) {
                 abort(404); // Program tidak ditemukan
             } // defaultProgram adalah nilai default
+        Session::forget('registered');
         return view('layouts.create', compact('program'));
     }
 
@@ -198,10 +199,12 @@ class PendaftaranController extends Controller
 
         $transaksi->pendaftaran_id = $pendaftaran->id;
         $transaksi->save(); // Simpan entri transaksi
-            
-            $request->session()->forget('form1_data'); // Clear session data
+        
+        Session::put('registered', true);
+        $request->session()->forget('form1_data'); // Clear session data
+        
 
-            return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
+        return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
             }
         }
 
@@ -214,12 +217,12 @@ class PendaftaranController extends Controller
             
         }
 
-        public function cancelRegistration(Request $request)
-        {
-            // Clear session data
-            $request->session()->forget('form1_data');
+        // public function cancelRegistration(Request $request)
+        // {
+        //     // Clear session data
+        //     $request->session()->forget('form1_data');
 
-            // Redirect to the first form or any other page
-            return redirect()->route('daftar')->with('status', 'Pendaftaran Dibatalkan');
-        }
+        //     // Redirect to the first form or any other page
+        //     return redirect()->route('daftar')->with('status', 'Pendaftaran Dibatalkan');
+        // }
 }

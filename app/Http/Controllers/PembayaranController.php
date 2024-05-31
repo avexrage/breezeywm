@@ -5,39 +5,55 @@ namespace App\Http\Controllers;
 use App\Models\BuktiTrsk;
 use App\Models\Transaksi;
 use App\Models\Pendaftaran;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+
 
 class PembayaranController extends Controller
 {
-    public function bayarday()
-    {
-        // Ambil pendaftaran terakhir untuk user yang sedang login
-        $pendaftaran = Pendaftaran::whereHas('dataPeserta', function($query) {
-            $query->where('user_id', Auth::id());
-        })->latest()->first();
+    public function bayarday(){
+    // Ambil pendaftaran terakhir untuk user yang sedang login
+    $pendaftaran = Pendaftaran::whereHas('dataPeserta', function($query) {
+        $query->where('user_id', Auth::id());
+    })->latest()->first();
 
-        if (!$pendaftaran) {
-            return redirect()->route('home')->with('error', 'Tidak ada pendaftaran ditemukan');
-        }
-
-        // Ambil transaksi terkait
-        $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
-
-        if (!$transaksi) {
-            return redirect()->route('home')->with('error', 'Tidak ada transaksi ditemukan');
-        }
-
+    // Jika tidak ada pendaftaran, kirim variabel sebagai null
+    if (!$pendaftaran) {
         return view('layouts.pembayaran', [
-            'transaksi' => $transaksi,
+            'pendaftaran' => null,
+            'transaksi' => null,
+            'nama_program' => null,
+            'programs' => null
+        ]);
+    }
+
+    // Ambil transaksi terkait
+    $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
+
+    // Jika tidak ada transaksi atau transaksi sudah lunas, kirim variabel sebagai null
+    if (!$transaksi || $transaksi->status_pembayaran == 'Lunas') {
+        return view('layouts.pembayaran', [
             'pendaftaran' => $pendaftaran,
+            'transaksi' => null,
+            'nama_program' => $pendaftaran->program->first()->nama_program,
             'programs' => $pendaftaran->program
         ]);
     }
 
-    public function cetakBuktiPendaftaran($id)
-    {
+    // Ambil nama program untuk header
+    $nama_program = $pendaftaran->program->first()->nama_program;
+
+    return view('layouts.pembayaran', [
+        'nama_program' => $nama_program, // Kirim nama program sebagai variabel
+        'transaksi' => $transaksi,
+        'pendaftaran' => $pendaftaran,
+        'programs' => $pendaftaran->program
+    ]);
+    }
+
+
+    public function cetakBuktiPendaftaran($id){
         $pendaftaran = Pendaftaran::findOrFail($id);
         $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
 
@@ -51,8 +67,7 @@ class PembayaranController extends Controller
         return $pdf->download('bukti_pendaftaran.pdf');
     }
 
-    public function uploadBuktiPembayaran(Request $request, $id)
-    {
+    public function uploadBuktiPembayaran(Request $request, $id){
         $request->validate([
             'bukti_pembayaran' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
         ],[
@@ -72,8 +87,12 @@ class PembayaranController extends Controller
                 ['transaksi_id' => $transaksi->id],
                 ['nama_file' => $path, 'tanggal_upload' => now()]
             );
+            
+            // Update status pembayaran menjadi "Menunggu Verifikasi Admin"
+            $transaksi->status_pembayaran = 'Menunggu Verifikasi Admin';
+            $transaksi->save();
+            
         }
-
-        return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload');
+        return redirect()->route('bayarday')->with('success', 'Bukti pembayaran berhasil diupload');
     }
 }

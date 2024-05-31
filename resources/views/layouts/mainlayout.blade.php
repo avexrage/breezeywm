@@ -9,7 +9,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
 </head>
-<body class="bg-light">
+<body class="d-flex flex-column min-vh-100 bg-light">
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-body-light fixed-top navbar-white shadow-sm">
     <div class="container-fluid">
@@ -35,6 +35,9 @@
                 <li class="nav-item">
                     <a class="nav-link text-success" href="{{ route('daftar') }}">Pendaftaran</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link text-success" href="{{ route('bayarday') }}">Pembayaran</a>
+              </li>
             </ul> 
         </div>
         <div class="button-container">
@@ -48,7 +51,7 @@
                         <i class="fa fa-user"></i> {{ Auth::user()->email }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item">Riwayat</a></li>
+                        <li><a class="dropdown-item" href="{{ route('riwayat') }}">Riwayat Pendaftaran</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fa fa-power-off"></i> Log Out</a></li>
                     </ul>
@@ -76,12 +79,13 @@
     </div>
   </div>
   
-<div id="main-content" class="pt-5 mt-5">
+<div id="main-content" class=" flex-grow-1 pt-5 mt-5">
     @yield('content1') 
     @yield('content2')
     @yield('content3')
     @yield('content4')
     @yield('content5')
+    @yield('content6')
     @yield('content0')
     @yield('content00')
 </div>
@@ -118,5 +122,6 @@
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
+@vite('resources/js/app.js')
 </body>
 </html>

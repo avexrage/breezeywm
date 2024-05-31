@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController as ControllersAdminController;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -8,6 +9,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SesiController;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PendaftaranController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -29,9 +32,15 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 //ADMIN
-Route::get('/admin', function () {
-    return view('admin.index');
-});
+// Route::group(['middleware' => ['auth.admin']], function () {
+    Route::get('/admin', function () {
+        return view('admin.index');
+    });
+// });
+
+Route::get('/admin/login', [ControllersAdminController::class, 'showLoginForm']);
+Route::post('/admin/login', [ControllersAdminController::class, 'login'])->name('admin.login');
+
 
 //LOGIN LOGOUT
 Route::get('/auth', [SesiController::class, 'showLoginForm'])->name('login');
@@ -119,7 +128,7 @@ Route::get('/test', function (){
 Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);        
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
-Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
+Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar')->middleware('check.registration');
 Route::post('/daftar/daycare', [PendaftaranController::class, 'daftar'])->name('daftarday');
 
 Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
@@ -128,8 +137,10 @@ Route::post('/daftar/grha/video', [PendaftaranController::class, 'daftar2'])->na
 Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->name('cancel');
 
 //Pembayaran
-Route::get('/pembayaran/daycare', [PembayaranController::class, 'bayarday'])->name('bayarday');
+Route::get('/tagihan-pembayaran', [PembayaranController::class, 'bayarday'])->name('bayarday')->middleware(['auth', 'verified']);
 Route::get('/cetak-bukti-pendaftaran/{id}', [PembayaranController::class, 'cetakBuktiPendaftaran'])->name('cetakBuktiPendaftaran');
 Route::post('/upload-bukti-pembayaran/{id}', [PembayaranController::class, 'uploadBuktiPembayaran'])->name('uploadBuktiPembayaran');
-
 Route::get('/cetak-pdf/{id}', [PembayaranController::class, 'cetakBuktiPendaftaran'])->name('cetak-pdf');
+
+//Riwayat
+Route::get('/riwayat-pendaftaran', [ProfileController::class, 'showRiwayat'])->name('riwayat');
