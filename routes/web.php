@@ -128,11 +128,15 @@ Route::get('/test', function (){
 Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);        
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
-Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar')->middleware('check.registration');
+//DAY CARE
+Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
 Route::post('/daftar/daycare', [PendaftaranController::class, 'daftar'])->name('daftarday');
 
+//GRHA WREDHA
+Route::get('/upload-video', [PendaftaranController::class, 'showUploadVideo'])->name('uploadvideo');
+Route::post('/upload-video', [PendaftaranController::class, 'uploadVideo'])->name('simpanvideo');
 Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
-Route::post('/daftar/grha/video', [PendaftaranController::class, 'daftar2'])->name('daftargrha');
+Route::post('/daftar/grha', [PendaftaranController::class, 'daftar2'])->name('daftargrha');
 
 Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->name('cancel');
 

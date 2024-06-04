@@ -98,6 +98,5 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "{{ route('tampilform') }}" + "?id=" + programId;
     });
 });
-
 </script>
 @endsection

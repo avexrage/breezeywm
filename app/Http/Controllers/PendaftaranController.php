@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Video;
 use App\Models\Program;
 use App\Models\Asuransi;
+use App\Models\Transaksi;
 use App\Models\DataPeserta;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Transaksi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -105,7 +106,7 @@ class PendaftaranController extends Controller
         if ($request->program_id == '111') {
             return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
         } else if ($request->program_id == '21') {
-            return redirect('/daftar/grha')->with('success', 'Data Peserta Berhasil Disimpan');
+            return redirect()->route('uploadvideo')->with('success', 'Data Peserta Berhasil Disimpan');
         }
     
     }
@@ -198,31 +199,70 @@ class PendaftaranController extends Controller
           
 
         $transaksi->pendaftaran_id = $pendaftaran->id;
-        $transaksi->save(); // Simpan entri transaksi
-        
+        $transaksi->save(); // Simpan entri transaksi    
         Session::put('registered', true);
         $request->session()->forget('form1_data'); // Clear session data
         
-
+        
         return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
             }
         }
 
-        public function showDaftar2 (Request $request){
+    public function showUploadVideo(){
+        return view('layouts.uploadvideo');
+    }
 
-            return view('layouts.daftar2');
-        }
-        
-        public function daftar2(){
-            
-        }
+    public function uploadVideo(Request $request) {
+        // Validasi input video
+        $request->validate([
+            'video' => 'required|file|mimes:mp4,mov,avi,wmv|max:20480', // Batas maksimum 20MB untuk video
+        ]);
+    
+        // Simpan video ke dalam penyimpanan yang sesuai (local, S3, dll.)
+        $videoPath = $request->file('video')->store('videos', 'public');
+    
+        // Dapatkan data peserta dari session
+        $form1Data = $request->session()->get('form1_data');
+    
+        // Simpan data peserta ke dalam database
+        $dataPeserta = DataPeserta::create([
+            'ktp' => $form1Data['ktp'],
+            'nama_lengkap_peserta' => $form1Data['nama'],
+            'alamat' => $form1Data['alamat'],
+            'tempat_lahir' => $form1Data['tlahir'],
+            'tanggal_lahir' => $form1Data['tgllhr'],
+            'jenis_kelamin' => $form1Data['kelamin'],
+            'agama' => $form1Data['agama'],
+            'statusnikah' => $form1Data['statusNikah'],
+            'pekerjaan' => $form1Data['pekerjaan'],
+            'riwayat_penyakit' => $form1Data['penyakit'],
+            'hobi' => $form1Data['hobi'],
+            'keahlian' => $form1Data['keahlian'],
+            'bahasa' => $form1Data['bahasa'],
+            'user_id' => Auth::id(), // Mengaitkan langsung saat pembuatan
+        ]);
+    
+        // Buat instansiasi baru dari model Video dan simpan informasinya
+        $video = new Video([
+            'nama_file' => basename($videoPath), // Nama file saja
+            'tanggal_upload' => now(), // Tanggal upload saat ini
+            'ukuran_file' => $request->file('video')->getSize(), // Ukuran file dalam byte
+            'data_peserta_id' => $dataPeserta->id, // Mengaitkan video dengan data peserta
+        ]);
+    
+        // Simpan video ke database
+        $video->save();
+    
+        // Hapus data peserta dari session
+        $request->session()->forget('form1_data');
+    
+        // Kirim data video ke view
+        return redirect()->route('riwayat')->with(['success' => 'Video Berhasil Disimpan', 'video' => $video]);
+    }
+    
+    public function showDaftar2 (Request $request){
 
-        // public function cancelRegistration(Request $request)
-        // {
-        //     // Clear session data
-        //     $request->session()->forget('form1_data');
-
-        //     // Redirect to the first form or any other page
-        //     return redirect()->route('daftar')->with('status', 'Pendaftaran Dibatalkan');
-        // }
-}
+        return view('layouts.daftar2');
+    }
+   
+}    

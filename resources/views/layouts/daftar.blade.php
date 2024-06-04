@@ -33,7 +33,7 @@
     <div class="row">
     <!-- Form Pilih Hari -->
         <div class="col-lg-4 col-md-6">
-            <div class="card mt-3">
+            <div class="card">
                 <div class="card-body rounded text-success">
                     <p style="font-size: 30px;">Pilih Hari</p>
                     <form action="{{ route('daftarday') }}" method="POST">

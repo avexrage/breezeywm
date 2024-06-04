@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
+use App\Models\DataPeserta;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,16 +60,21 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function showRiwayat(){
-
-        // Ambil semua pendaftaran untuk user yang sedang login
-    $pendaftaran = Pendaftaran::whereHas('dataPeserta', function($query) {
-        $query->where('user_id', Auth::id());
-    })->orderBy('created_at', 'desc')->get();
-
-    return view('layouts.riwayat', [
-        'pendaftaran' => $pendaftaran
-    ]);
-        return view('');
+    public function showRiwayat() {
+        // Retrieve all 'Pendaftaran' for the logged-in user
+        $pendaftaran = Pendaftaran::whereHas('dataPeserta', function($query) {
+            $query->where('user_id', Auth::id());
+        })->orderBy('created_at', 'desc')->get();
+    
+        // Retrieve 'DataPeserta' with videos for the logged-in user
+        $dataPesertaWithVideos = DataPeserta::where('user_id', Auth::id())
+                                             ->has('video')
+                                             ->get();
+    
+        return view('layouts.riwayat', [
+            'pendaftaran' => $pendaftaran,
+            'dataPesertaWithVideos' => $dataPesertaWithVideos
+        ]);
     }
+    
 }

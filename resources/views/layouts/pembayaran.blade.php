@@ -3,7 +3,7 @@
 @section('content5')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center text-success">
-        <h1 class="display-6 text-success">Tagihan<br>Pembayaran Program</h1>
+        <h1 class="display-6">Tagihan<br>Pembayaran Program</h1>
         <button class="btn btn-secondary" onclick="location.href='{{ route('home') }}';">
             <i class="bi bi-arrow-left"></i>
         </button>
@@ -11,8 +11,14 @@
     @include('layouts.pesan')
 
     @if (!$pendaftaran || !$transaksi)
-        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-            <h2 class="text-center">Tidak ada tagihan pembayaran atau tagihan sudah lunas.</h2>
+        <div class="card mb-3 text-center text-white shadow-sm" style="border: none">
+            <div class="card-header py-3 bg-success">
+                <h1 class="display-6">Tidak Ada Tagihan Pembayaran</h1>
+            </div>
+            <div class="card-body" style="border: none">
+                <p class="card-text text-success">Jika Sudah Mendaftar, Cek Status Pendaftaran Disini</p>
+                <a href="{{ route('riwayat') }}" class="btn btn-outline-success">Riwayat Pendaftaran</a>
+            </div>
         </div>
     @else
         <!-- Tampilan tagihan pembayaran jika status pembayaran belum lunas -->
@@ -54,16 +60,22 @@
         <div class="row my-3">
             <div class="col-lg-4 col-md-6">
                 <div class="card">
-                    <div class="card-header text-center bg-success text-white">
-                        <h4>Tata Cara Pembayaran</h4>
+                    <div class="card-header text-center bg-success text-white" data-bs-toggle="collapse" href="#collapseCard" role="button" aria-expanded="false" aria-controls="collapseCard">
+                        <h4>Tata Cara Pembayaran <i class="bi bi-chevron-down"></i></h4>
                     </div>
-                    <div class="card-body">
-                        <p>Metode Pembayaran: Tunai </p>
-                        <li>Klik Cetak Bukti Pendaftaran untuk menyimpan data pendaftaran.</li>
-                        <li>Simpan untuk unduh bukti dan bawa saat datang ke Yayasan.</li><br>
-                        <p>Metode Pembayaran: Transfer BRI </p>
-                        <li>Klik Choose File dan pilih foto bukti transfer.</li>
-                        <li>Klik Upload Bukti Pembayaran.</li>
+                    <div class="collapse" id="collapseCard">
+                        <div class="card-body">
+                            <p>Metode Pembayaran: Tunai </p>
+                            <ul>
+                                <li>Klik Cetak Bukti Pendaftaran untuk menyimpan data pendaftaran.</li>
+                                <li>Simpan untuk unduh bukti dan bawa saat datang ke Yayasan.</li>
+                            </ul>
+                            <p>Metode Pembayaran: Transfer BRI </p>
+                            <ul>
+                                <li>Klik Choose File dan pilih foto bukti transfer.</li>
+                                <li>Klik Upload Bukti Pembayaran.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -86,6 +86,7 @@
     @yield('content4')
     @yield('content5')
     @yield('content6')
+    @yield('content7')
     @yield('content0')
     @yield('content00')
 </div>

@@ -8,48 +8,40 @@ use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 
 class PembayaranController extends Controller
 {
-    public function bayarday(){
-    // Ambil pendaftaran terakhir untuk user yang sedang login
-    $pendaftaran = Pendaftaran::whereHas('dataPeserta', function($query) {
-        $query->where('user_id', Auth::id());
-    })->latest()->first();
+    public function bayarday()
+    {
+        // Ambil pendaftaran terakhir untuk user yang sedang login
+        $pendaftaran = Pendaftaran::whereHas('dataPeserta', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->latest()->first();
 
-    // Jika tidak ada pendaftaran, kirim variabel sebagai null
-    if (!$pendaftaran) {
+        // Jika tidak ada pendaftaran, kirim variabel sebagai null
+        if (!$pendaftaran) {
+            return view('layouts.pembayaran', [
+                'pendaftaran' => null,
+                'transaksi' => null,
+                'nama_program' => null,
+                'programs' => null
+            ]);
+        }
+
+        // Ambil transaksi terkait
+        $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
+
+        // Ambil nama program untuk header
+        $nama_program = $pendaftaran->program->first()->nama_program;
+
         return view('layouts.pembayaran', [
-            'pendaftaran' => null,
-            'transaksi' => null,
-            'nama_program' => null,
-            'programs' => null
-        ]);
-    }
-
-    // Ambil transaksi terkait
-    $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
-
-    // Jika tidak ada transaksi atau transaksi sudah lunas, kirim variabel sebagai null
-    if (!$transaksi || $transaksi->status_pembayaran == 'Lunas') {
-        return view('layouts.pembayaran', [
+            'nama_program' => $nama_program, // Kirim nama program sebagai variabel
+            'transaksi' => $transaksi,
             'pendaftaran' => $pendaftaran,
-            'transaksi' => null,
-            'nama_program' => $pendaftaran->program->first()->nama_program,
             'programs' => $pendaftaran->program
         ]);
-    }
-
-    // Ambil nama program untuk header
-    $nama_program = $pendaftaran->program->first()->nama_program;
-
-    return view('layouts.pembayaran', [
-        'nama_program' => $nama_program, // Kirim nama program sebagai variabel
-        'transaksi' => $transaksi,
-        'pendaftaran' => $pendaftaran,
-        'programs' => $pendaftaran->program
-    ]);
     }
 
 
@@ -71,7 +63,8 @@ class PembayaranController extends Controller
         $request->validate([
             'bukti_pembayaran' => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
         ],[
-            'bukti_pembayaran.max' => 'Maksimal file yang diupload 2 MB'
+            'bukti_pembayaran.max' => 'Maksimal file yang diupload 2 MB',
+            'bukti_pembayaran.file' => 'Tipe file bukti pembayaran antara jpg, png, jpeg, pdf',
         ]);
 
         $pendaftaran = Pendaftaran::findOrFail($id);

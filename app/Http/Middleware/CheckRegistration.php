@@ -19,7 +19,7 @@ class CheckRegistration
     {
         if (Session::has('registered')) {
             // Redirect ke halaman pembayaran atau halaman lain yang relevan
-            return redirect()->route('bayarday');
+            return redirect()->route('home');
         }
         return $next($request);
     }
