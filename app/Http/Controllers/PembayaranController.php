@@ -13,37 +13,61 @@ use Illuminate\Support\Facades\Session;
 
 class PembayaranController extends Controller
 {
-    public function bayarday()
-    {
-        // Ambil pendaftaran terakhir untuk user yang sedang login
-        $pendaftaran = Pendaftaran::whereHas('dataPeserta', function ($query) {
-            $query->where('user_id', Auth::id());
-        })->latest()->first();
+    public function bayar(){
+    // Ambil semua pendaftaran untuk user yang sedang login
+    $pendaftaranList = Pendaftaran::whereHas('dataPeserta', function ($query) {
+        $query->where('user_id', Auth::id());
+    })->orderBy('created_at', 'desc')->get();
 
-        // Jika tidak ada pendaftaran, kirim variabel sebagai null
-        if (!$pendaftaran) {
-            return view('layouts.pembayaran', [
-                'pendaftaran' => null,
-                'transaksi' => null,
-                'nama_program' => null,
-                'programs' => null
-            ]);
+    // Filter pendaftaran dengan transaksi yang belum lunas
+    $unpaidTransactions = [];
+    foreach ($pendaftaranList as $pendaftaran) {
+        $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)
+            ->where('status_pembayaran', '!=', 'Lunas')
+            ->first();
+
+       // Asumsi durasi ada di relasi pivot
+        $durasi = $pendaftaran->program->first()->pivot->durasi ?? null;
+        
+        if ($transaksi) {
+            $unpaidTransactions[] = [
+                'pendaftaran' => $pendaftaran,
+                'transaksi' => $transaksi,
+                'nama_program' => $pendaftaran->program->first()->nama_program,
+                'programs' => $pendaftaran->program,
+                'check_in' => $pendaftaran->check_in,
+                'check_out' => $pendaftaran->check_out,
+                'nama_lengkap_peserta' =>  $pendaftaran->dataPeserta->nama_lengkap_peserta,
+                'durasi' => $durasi,
+            ];
         }
+    }
 
-        // Ambil transaksi terkait
-        $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
-
-        // Ambil nama program untuk header
-        $nama_program = $pendaftaran->program->first()->nama_program;
-
+    // Jika tidak ada transaksi yang belum lunas, kirim variabel sebagai null
+    if (empty($unpaidTransactions)) {
         return view('layouts.pembayaran', [
-            'nama_program' => $nama_program, // Kirim nama program sebagai variabel
-            'transaksi' => $transaksi,
-            'pendaftaran' => $pendaftaran,
-            'programs' => $pendaftaran->program
+            'unpaidTransactions' => null
         ]);
     }
 
+    return view('layouts.pembayaran', [
+        'unpaidTransactions' => $unpaidTransactions
+        ]);
+    }
+
+    public function pilihMetode(Request $request, $id)
+{
+    $validated = $request->validate([
+        'metodePembayaran' => 'required|string',
+    ]);
+
+    $pendaftaran = Pendaftaran::findOrFail($id);
+    $pendaftaran->metode_pembayaran = $validated['metodePembayaran'];
+    $pendaftaran->save();
+
+    // Redirect ke halaman pembayaran dengan pesan sukses
+    return redirect()->route('bayar')->with('success', 'Metode pembayaran berhasil dipilih.');
+}
 
     public function cetakBuktiPendaftaran($id){
         $pendaftaran = Pendaftaran::findOrFail($id);
@@ -83,9 +107,10 @@ class PembayaranController extends Controller
             
             // Update status pembayaran menjadi "Menunggu Verifikasi Admin"
             $transaksi->status_pembayaran = 'Menunggu Verifikasi Admin';
+            $transaksi->tanggal_transaksi = now();
             $transaksi->save();
             
         }
-        return redirect()->route('bayarday')->with('success', 'Bukti pembayaran berhasil diupload');
+        return redirect()->route('bayar')->with('success', 'Bukti pembayaran berhasil diupload');
     }
 }

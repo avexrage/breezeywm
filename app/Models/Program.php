@@ -20,7 +20,7 @@ class Program extends Model
 
     public function pendaftaran(){
         return $this->belongsToMany(Pendaftaran::class, 'detail_pendaftaran', 'program_id', 'pendaftaran_id')
-                    ->withPivot('tanggal', 'tipe', 'harga')
+                    ->withPivot('tanggal', 'tipe', 'harga', 'durasi')
                     ->withTimestamps();
     }
 }

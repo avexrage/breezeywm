@@ -4,9 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
-class CheckRegistration
+class Registering
 {
     /**
      * Handle an incoming request.
@@ -17,9 +16,8 @@ class CheckRegistration
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Session::has('registered')) {
-            // Redirect ke halaman pembayaran atau halaman lain yang relevan
-            return redirect()->route('home');
+        if(!session()->has('form1_data')){
+            return redirect()->route('bayarday');
         }
         return $next($request);
     }

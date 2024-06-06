@@ -14,6 +14,9 @@ class DetailPendaftaran extends Model
         'pendaftaran_id',
         'program_id',
         'tanggal',
+        'tipe',
+        'harga',
+        'durasi'
     ];
 
 }

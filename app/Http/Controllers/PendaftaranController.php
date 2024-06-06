@@ -37,7 +37,6 @@ class PendaftaranController extends Controller
             if (!$program) {
                 abort(404); // Program tidak ditemukan
             } // defaultProgram adalah nilai default
-        Session::forget('registered');
         return view('layouts.create', compact('program'));
     }
 
@@ -102,16 +101,15 @@ class PendaftaranController extends Controller
         ]);
 
         $request->session()->put('form1_data', $validatedData);
-   
         if ($request->program_id == '111') {
-            return redirect('/daftar')->with('success', 'Data Peserta Berhasil Disimpan');
+            return redirect()->route('showdaftar')->with('success', 'Data Peserta Berhasil Disimpan');
         } else if ($request->program_id == '21') {
-            return redirect()->route('uploadvideo')->with('success', 'Data Peserta Berhasil Disimpan');
+            return redirect()->route('showdaftar2')->with('success', 'Data Peserta Berhasil Disimpan');
         }
     
     }
 
-    public function showDaftar (Request $request){
+    public function showDaftar (){
 
         return view('layouts.daftar');
     }
@@ -200,32 +198,38 @@ class PendaftaranController extends Controller
 
         $transaksi->pendaftaran_id = $pendaftaran->id;
         $transaksi->save(); // Simpan entri transaksi    
-        Session::put('registered', true);
         $request->session()->forget('form1_data'); // Clear session data
         
         
-        return redirect()->route('bayarday')->with('success', 'Pendaftaran berhasil disimpan.');
+        return redirect()->route('bayar')->with('success', 'Pendaftaran berhasil disimpan.');
             }
         }
 
-    public function showUploadVideo(){
-        return view('layouts.uploadvideo');
+    public function showDaftar2 (){
+
+        return view('layouts.daftar2');
     }
 
-    public function uploadVideo(Request $request) {
-        // Validasi input video
-        $request->validate([
+    public function daftar2(Request $request) {
+        $validatedData = $request->validate([
+            'program' => 'required|string|in:21,22',
+            'durasi' => 'required',
             'video' => 'required|file|mimes:mp4,mov,avi,wmv|max:20480', // Batas maksimum 20MB untuk video
-        ]);
-    
-        // Simpan video ke dalam penyimpanan yang sesuai (local, S3, dll.)
-        $videoPath = $request->file('video')->store('videos', 'public');
+        ],[
+            'program.required' => 'Pilih Tipe Rumah yang tersedia.',
+            'durasi.required' => 'Pilih Lama Mengikuti Program.',
+            'video.required' => 'Bukti Video Kemandirian Lansia Wajib Diisi',
+            'video.max' => 'Besar maksimal ukuran video 20MB',
+            'video.mimes' => 'Tipe video yang diterima adalah mp4, mov, avi, wmv'
+        ]); 
     
         // Dapatkan data peserta dari session
         $form1Data = $request->session()->get('form1_data');
     
-        // Simpan data peserta ke dalam database
+        if ($form1Data) {
+        // Simpan data ke tabel data_peserta
         $dataPeserta = DataPeserta::create([
+            'program_id' => $form1Data['program_id'],
             'ktp' => $form1Data['ktp'],
             'nama_lengkap_peserta' => $form1Data['nama'],
             'alamat' => $form1Data['alamat'],
@@ -239,9 +243,51 @@ class PendaftaranController extends Controller
             'hobi' => $form1Data['hobi'],
             'keahlian' => $form1Data['keahlian'],
             'bahasa' => $form1Data['bahasa'],
-            'user_id' => Auth::id(), // Mengaitkan langsung saat pembuatan
+            'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
         ]);
-    
+
+        // Simpan data ke tabel asuransi
+        if (!empty($form1Data['asuransi']) && !empty($form1Data['noasuransi'])) {
+            $dataAsuransi = new Asuransi([
+                'nama_asuransi' => $form1Data['asuransi'],
+                'no_asuransi' => $form1Data['noasuransi']
+            ]);
+        
+            $dataPeserta->save(); // Save data_peserta record
+            $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
+            $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
+        }
+        
+        // Simpan data pendaftaran
+        $pendaftaran = new Pendaftaran([
+            'check_in' => null,
+            'check_out' => null,
+            'metode_pembayaran' => null,
+            'data_peserta_id' => $dataPeserta->id,
+        ]);
+        $pendaftaran->save(); 
+
+        // Ambil data program berdasarkan ID
+        $program = Program::findOrFail($validatedData['program']);
+
+        // Simpan relasi many-to-many antara pendaftaran dan program
+        $pendaftaran->program()->attach($validatedData['program'], [
+            'durasi' => $validatedData['durasi'],
+            'tipe' => $program->tipe, 
+            'harga' => $program->harga, 
+        ]);
+
+        // Hitung total harga
+        $totalHarga = $validatedData['durasi'] * $program->harga;
+
+        $transaksi = new Transaksi([
+            'total_harga' => $totalHarga,
+            'pendaftaran_id' => $pendaftaran->id // Assuming you have a foreign key relationship
+        ]);
+        $transaksi->save();
+        
+        // Simpan video ke dalam penyimpanan yang sesuai (local, S3, dll.)
+        $videoPath = $request->file('video')->store('videos', 'public');
         // Buat instansiasi baru dari model Video dan simpan informasinya
         $video = new Video([
             'nama_file' => basename($videoPath), // Nama file saja
@@ -257,12 +303,26 @@ class PendaftaranController extends Controller
         $request->session()->forget('form1_data');
     
         // Kirim data video ke view
-        return redirect()->route('riwayat')->with(['success' => 'Video Berhasil Disimpan', 'video' => $video]);
+        return redirect()->route('riwayat')->with(['success' => 'Pendaftaran Berhasil Disimpan, Tunggu Admin Memverifikasi Video Kemandirian', 'video' => $video]);
+        }
+    
+        return redirect()->back()->withErrors(['error' => 'Data peserta tidak ditemukan di sesi.']);
     }
     
-    public function showDaftar2 (Request $request){
-
-        return view('layouts.daftar2');
+    public function lanjutkanPembayaran($id)
+    {
+        // Logika untuk melanjutkan pembayaran
     }
-   
+    
+    public function batalkanPendaftaran($id)
+    {
+        $daftar = Pendaftaran::find($id);
+        if ($daftar) {
+            $daftar->status_pendaftaran = 'Dibatalkan';
+            $daftar->save();
+        }
+        return redirect()->route('riwayat');
+    }
+    
+    
 }    

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yayasan Wredha Mulya | @yield('title')</title>
+    <title>@yield('title') | Yayasan Wredha Mulya</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -36,7 +36,7 @@
                     <a class="nav-link text-success" href="{{ route('daftar') }}">Pendaftaran</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-success" href="{{ route('bayarday') }}">Pembayaran</a>
+                  <a class="nav-link text-success" href="{{ route('bayar') }}">Pembayaran</a>
               </li>
             </ul> 
         </div>
@@ -87,6 +87,7 @@
     @yield('content5')
     @yield('content6')
     @yield('content7')
+    @yield('content8')
     @yield('content0')
     @yield('content00')
 </div>

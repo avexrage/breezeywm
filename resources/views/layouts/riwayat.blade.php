@@ -3,106 +3,235 @@
 @section('content6')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center text-success">
-        <h1 class="display-6 text-success">Riwayat<br>Pendaftaran Program</h1>
+        <h1 class="display-6">Riwayat <br> Pendaftaran Program</h1>
         <button class="btn btn-secondary" onclick="location.href='{{ route('home') }}';">
-            <i class="bi bi-arrow-left"></i>
+            <i class="bi bi-arrow-left"></i> Kembali
         </button>
     </div>
     @include('layouts.pesan')
-    @if ($pendaftaran->isEmpty() && $dataPesertaWithVideos->isEmpty())
-    <div class="card mb-3 text-center text-white shadow-sm" style="border: none">
-        <div class="card-header py-3 bg-success">
-            <h1 class="display-6">Tidak Ada Riwayat Pendaftaran</h1>
+    @if ($pendaftaran->isEmpty())
+        <div class="card mb-3 text-center shadow-sm" style="border: none">
+            <div class="card-header py-3 bg-success text-white">
+                <h1 class="display-6">Tidak Ada Riwayat Pendaftaran</h1>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-success">Klik Disini Untuk Mendaftar</p>
+                <a href="{{ route('daftar') }}" class="btn btn-outline-success">Daftar</a>
+            </div>
         </div>
-        <div class="card-body" style="border: none">
-            <p class="card-text text-success">Klik Disini Untuk Mendaftar</p>
-            <a href="{{ route('daftar') }}" class="btn btn-outline-success">Daftar</a>
-        </div>
-    </div>
     @else
-    @foreach ($dataPesertaWithVideos as $dataPeserta)
-    <div class="card mb-3">
-        <div class="card-header text-white bg-success">
-            <h1 class="display-6">Grha Wredha Mulya</h1>
-        </div>
-        <div class="card-body">
-            <h6 class="card-subtitle mb-2">Status Pendaftaran:
-                @if ($dataPeserta->pendaftaran && $dataPeserta->pendaftaran->status_pendaftaran == 'Menunggu Jadwal')
-                    <span class="badge bg-warning">Menunggu Jadwal</span>
-                    <a href="{{ route('showDaftar2') }}" class="btn btn-primary mt-2">Lanjutkan Pendaftaran</a>
-                @elseif ($dataPeserta->pendaftaran && $dataPeserta->pendaftaran->status_pendaftaran == 'Ditolak')
-                    <span class="badge bg-danger">Ditolak</span>
-                    <p>Alasan: {{ $dataPeserta->pendaftaran->alasan }}</p>
-                @elseif ($dataPeserta->pendaftaran && $dataPeserta->pendaftaran->status_pendaftaran == 'Diterima')
-                    <span class="badge bg-success">Diterima</span>
-                @else
-                    <span class="badge bg-primary">Baru</span>
-                @endif
-            </h6>
-            <p class="card-text text-secondary">Nama Peserta: {{ $dataPeserta->nama_lengkap_peserta }} <br> Nomor KTP: {{ $dataPeserta->ktp }}</p>
-            <h6 class="card-subtitle">Jika lansia terverifikasi lansia mandiri maka Status Pendaftaran akan menjadi Menunggu Jadwal. Harap menunggu Verifikasi Admin maksimal 1 x 24 jam. Cek Riwayat Pendaftaran secara berkala</h6>
-            <!-- Additional data as needed -->
-        </div>
-    </div>
-    @endforeach
-    @foreach ($pendaftaran as $daftar)
-    <div class="card mb-3">
-        <div class="card-header text-white bg-success">
-            <h1 class="display-6">{{ $daftar->program->first()->nama_program }}</h1>
-        </div>
-        <div class="card-body">
-            <h6 class="card-subtitle mb-2">Status Pendaftaran:
-                @if ($daftar->status_pendaftaran == 'Baru')
-                    <span class="badge bg-primary">Baru</span>
-                @elseif($daftar->status_pendaftaran == 'Ditolak')
-                    <span class="badge bg-danger">Ditolak</span>
-                    <p>Alasan: {{ $daftar->alasan }}</p>
-                @elseif($daftar->status_pendaftaran == 'Dibatalkan')
-                    <span class="badge bg-danger">Dibatalkan</span>
-                @elseif($daftar->status_pendaftaran == 'Menunggu Jadwal')
-                    <span class="badge bg-warning">Menunggu Jadwal</span>
-                    <a href="{{ route('showDaftar2') }}" class="btn btn-primary mt-2">Lanjutkan Pendaftaran</a>
-                @elseif($daftar->status_pendaftaran == 'Diterima')
-                    <span class="badge bg-success">Diterima</span>
-                @endif
-            </h6>
-            <h6 class="card-subtitle mb-2">Metode Pembayaran: {{ $daftar->metode_pembayaran }}</h6>
-            <p class="card-text text-secondary">Pendaftaran ID: {{ $daftar->id }}</p>
+        @foreach ($pendaftaran as $daftar)
+            <div class="card mb-3 shadow-sm" style="border: none">
+                <div class="card-header text-white bg-success">
+                    <h1 class="display-6">{{ $daftar->program->first()->nama_program }}</h1>
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <p class="card-text text-center"><strong>Status Pendaftaran</strong></p>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">:&nbsp;
+                                @if ($daftar->status_pendaftaran == 'Baru')
+                                    <span class="badge bg-primary">Baru</span>
+                                @elseif($daftar->status_pendaftaran == 'Ditolak')
+                                    <span class="badge bg-danger">Ditolak</span>
+                                @elseif($daftar->status_pendaftaran == 'Dibatalkan')
+                                    <span class="badge bg-danger">Dibatalkan</span>
+                                @elseif($daftar->status_pendaftaran == 'Menunggu Jadwal')
+                                    <span class="badge bg-warning">Menunggu Jadwal</span>
+                                @elseif($daftar->status_pendaftaran == 'Diterima')
+                                    <span class="badge bg-success">Diterima</span>
+                                @endif
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                <p class="card-text text-center"><strong>Tanggal Masuk:
+                                @if(isset($daftar->check_in))
+                                    {{ \Carbon\Carbon::parse($daftar->check_in)->format('d-m-Y') }}
+                                @else
+                                    -
+                                @endif</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <p class="card-text text-center"><strong>Metode Pembayaran</strong></p>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center">:&nbsp;
+                                @if(isset($daftar->metode_pembayaran))
+                                    {{ $daftar->metode_pembayaran }}
+                                @else
+                                    -
+                                @endif
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                <p class="card-text text-center"><strong>Tanggal Keluar:
+                                @if(isset($daftar->check_out))
+                                    {{ \Carbon\Carbon::parse($daftar->check_out)->format('d-m-Y') }}
+                                @else
+                                    -
+                                @endif</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <p class="card-text text-center"><strong>Pendaftaran ID</strong></p>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center justify-content-start">:&nbsp;
+                                <p class="card-text text-center">{{ $daftar->id }}</p>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                @foreach ($daftar->program as $program)
+                                    @if ($program->nama_program == 'Grha Wredha Mulya')
+                                        <p class="card-text text-center"><strong>Lama Program: {{ $program->pivot->durasi }} Tahun</strong></p>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <p class="card-text text-center"><strong>Nama Peserta</strong></p>
+                            </div>
+                            <div class="col-md-10 d-flex align-items-center">:&nbsp;
+                                <p class="card-text text-center">{{ $daftar->dataPeserta->nama_lengkap_peserta }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 d-flex align-items-center">
+                                @if ($daftar->status_pendaftaran == 'Ditolak')
+                                    <p class="card-text text-center"><strong>Alasan</strong></p>
+                                @endif
+                            </div>
+                            <div class="col-md-10 d-flex align-items-center">
+                                @if ($daftar->status_pendaftaran == 'Ditolak')
+                                    <p class="card-text text-center">:&nbsp;{{ $daftar->alasan }}</p>
+                                @endif
+                            </div>
+                            @if ($daftar->status_pendaftaran == 'Diterima')
+                                @php
+                                    $showButton = false;
+                                    $statuspembayaran = $daftar->transaksi->status_pembayaran;
+                                    foreach ($daftar->program as $program) {
+                                        if (in_array($program->id_program, [21, 22])) {                
+                                            $showButton = true;
+                                                if($daftar->status_pendaftaran == 'Diterima' && $statuspembayaran){
+                                                    $showButton = true;
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                <div class="col-md-6">
+                                    @if ($showButton)
+                                        <button class="btn btn-primary text-white mt-2 w-100" data-bs-toggle="modal" data-bs-target="#paymentModal{{ $daftar->id }}"><strong>Lanjutkan Pembayaran</strong></button>
+                                    @endif
+                                </div>
+                                <div class="col-md-6">
+                                    @if ($showButton)
+                                        <button class="btn btn-danger text-white mt-2 w-100" onclick="location.href='{{ route('batalkanPendaftaran', $daftar->id) }}'"><strong>Batalkan Pembayaran</strong></button>
+                                    @endif
+                                </div>
+                            @elseif($daftar->status_pendaftaran == 'Baru')
+                                @php
+                                    $showButton = false;
 
-            <table class="table mt-3">
-                <thead>
-                    <tr>
-                        <th scope="col">Tanggal</th>
-                        <th scope="col">Tipe</th>
-                        <th scope="col">Harga</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($daftar->program as $program)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($program->pivot->tanggal)->format('d-m-Y') }}</td>
-                        <td>{{ $program->pivot->tipe }}</td>
-                        <td>{{ number_format($program->pivot->harga, 0, ',', '.') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            
-            <p class="card-text text-end"><strong>Total Harga: {{ number_format($daftar->transaksi->total_harga, 0, ',', '.') }}</strong></p>
-            <h6 class="card-subtitle mb-2 text-muted text-end">Status Pembayaran:
-                @if ($daftar->transaksi->status_pembayaran == 'Lunas')
-                    <span class="badge bg-success">Lunas</span>
-                @elseif($daftar->transaksi->status_pembayaran == 'Belum Lunas')
-                    <span class="badge bg-danger">Belum Lunas</span>
-                @else
-                    <span class="badge bg-warning">Menunggu Verifikasi Admin</span>
-                @endif
-            </h6>
-        </div>
-    </div>
-    @endforeach
+                                    foreach ($daftar->program as $program) {
+                                        if (in_array($program->id_program, [21, 22])) {
+                                            
+                                            $showButton = true;
+                                        }
+                                    }
+                                @endphp
+                                <div class="col">
+                                    @if ($showButton)
+                                        <button class="btn btn-secondary text-white mt-2 w-100"><strong>Menunggu Admin Verifikasi Kemandirian Lansia</strong></button>
+                                    @endif
+                                </div>
+                            @elseif($daftar->status_pendaftaran == 'Menunggu Jadwal')
+                                @php
+                                    $showButton = false;
 
-        
+                                    foreach ($daftar->program as $program) {
+                                        if (in_array($program->id_program, [21, 22])) {
+                                            
+                                            $showButton = true;
+                                        }
+                                    }
+                                @endphp
+                                <div class="col">
+                                    @if ($showButton)
+                                        <button class="btn btn-warning text-white mt-2 w-100"><strong>Menunggu Jadwal Mulai Masuk Program</strong></button>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <table class="table mt-3 table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tanggal</th>
+                                <th scope="col">Tipe</th>
+                                <th scope="col" class="text-end">Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($daftar->program as $program)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($program->pivot->tanggal)->format('d-m-Y') }}</td>
+                                    <td>{{ $program->pivot->tipe }}</td>
+                                    <td class="text-end">{{ number_format($program->pivot->harga, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <p class="card-text text-end"><strong>Total Harga: 
+                        @if (isset($daftar->transaksi) && !is_null($daftar->transaksi->total_harga))
+                            {{ number_format($daftar->transaksi->total_harga, 0, ',', '.') }}
+                        @else
+                            -
+                        @endif
+                        </strong></p>
+                    <h6 class="card-subtitle mb-2 text-muted text-end">Status Pembayaran:
+                        @if (isset($daftar->transaksi))
+                            @if ($daftar->transaksi->status_pembayaran == 'Lunas')
+                                <span class="badge bg-success">Lunas</span>
+                            @elseif($daftar->transaksi->status_pembayaran == 'Belum Lunas')
+                                <span class="badge bg-danger">Belum Lunas</span>
+                            @else
+                                <span class="badge bg-warning">Menunggu Verifikasi Admin</span>
+                            @endif
+                        @else
+                            <span class="badge bg-secondary">-</span>
+                        @endif
+                    </h6>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="paymentModal{{ $daftar->id }}" tabindex="-1" aria-labelledby="paymentModalLabel{{ $daftar->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="{{ route('pilihmetode', $daftar->id) }}" method="POST">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="paymentModalLabel{{ $daftar->id }}">Pilih Metode Pembayaran</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label class="form-label" for="metodePembayaran">Metode Pembayaran</label>
+                                <select class="form-control" id="metodePembayaran" name="metodePembayaran" required>
+                                    <option value="" disabled selected>Pilih Pembayaran</option>
+                                    <option value="Tunai">Tunai</option>
+                                    <option value="Transfer BRI">Transfer BRI</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-primary">Pilih</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     @endif
 </div>
 @endsection

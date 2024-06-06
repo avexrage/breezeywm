@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('pendaftaran', function (Blueprint $table) {
             $table->id();
-            $table->date('check_in'); 
-            $table->date('check_out'); 
-            $table->enum('metode_pembayaran',['Tunai', 'Transfer BRI']);
+            $table->date('check_in')->nullable(); 
+            $table->date('check_out')->nullable(); 
+            $table->enum('metode_pembayaran',['Tunai', 'Transfer BRI'])->nullable();
             $table->enum('status_pendaftaran',['Baru', 'Ditolak', 'Diterima', 'Menunggu Jadwal', 'Dibatalkan'])->default('Baru');
             $table->text('alasan')->nullable();
             $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');

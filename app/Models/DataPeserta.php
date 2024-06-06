@@ -14,8 +14,6 @@ class DataPeserta extends Model
 
     protected $table = 'data_peserta';
 
-    public $timestamps = false;
-
     public function user(){
         return $this->belongsTo(User::class);
     }

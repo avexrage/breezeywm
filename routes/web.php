@@ -129,19 +129,21 @@ Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform'
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
 
 //DAY CARE
-Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showDaftar');
+Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showdaftar')->middleware('register');
 Route::post('/daftar/daycare', [PendaftaranController::class, 'daftar'])->name('daftarday');
 
 //GRHA WREDHA
-Route::get('/upload-video', [PendaftaranController::class, 'showUploadVideo'])->name('uploadvideo');
-Route::post('/upload-video', [PendaftaranController::class, 'uploadVideo'])->name('simpanvideo');
-Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showDaftar2');
+Route::get('/daftar/grha', [PendaftaranController::class, 'showDaftar2'])->name('showdaftar2');
 Route::post('/daftar/grha', [PendaftaranController::class, 'daftar2'])->name('daftargrha');
+Route::get('/lanjutkan-pembayaran/{id}', [PendaftaranController::class, 'lanjutkanPembayaran'])->name('lanjutkanPembayaran');
+Route::get('/batalkan-pendaftaran/{id}', [PendaftaranController::class, 'batalkanPendaftaran'])->name('batalkanPendaftaran');
+
 
 Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->name('cancel');
 
 //Pembayaran
-Route::get('/tagihan-pembayaran', [PembayaranController::class, 'bayarday'])->name('bayarday')->middleware(['auth', 'verified']);
+Route::get('/tagihan-pembayaran', [PembayaranController::class, 'bayar'])->name('bayar')->middleware(['auth', 'verified']);
+Route::post('/proses-pembayaran/{id}', [PembayaranController::class, 'pilihMetode'])->name('pilihmetode');
 Route::get('/cetak-bukti-pendaftaran/{id}', [PembayaranController::class, 'cetakBuktiPendaftaran'])->name('cetakBuktiPendaftaran');
 Route::post('/upload-bukti-pembayaran/{id}', [PembayaranController::class, 'uploadBuktiPembayaran'])->name('uploadBuktiPembayaran');
 Route::get('/cetak-pdf/{id}', [PembayaranController::class, 'cetakBuktiPendaftaran'])->name('cetak-pdf');

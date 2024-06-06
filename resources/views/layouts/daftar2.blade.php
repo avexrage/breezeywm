@@ -1,166 +1,137 @@
 @extends('layouts.mainlayout')
 @section('title', 'Daftar')
-@section('content5')
+@section('content7')
 
 <div class="container">
     @include('layouts.pesan')
-    <h1 class="display-6 text-success">
-    Daftar Program <br>
-    Grha Wredha Mulya</h1>
-        <div class="row">
-            <div class="col-lg-4 col-md-6" >
-                <div class="card text-success">
-                    <div class="card-body rounded" style="background-color: #EAFCE9">
-                        <p style="font-size: 30px; ">Pilih Hari</p>
-                        <form action="{{ route('daftargrha') }}" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="startDate" class="form-label">Tanggal Mulai</label>
-                                <input type="date" class="form-control" id="startDate" name="startDate" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 month')) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="tahun" class="form-label">Waktu Mengikuti Program</label>
-                                <div class="d-flex align-items-center">
-                                    <select class="form-control me-3" name="tahun" id="tahun" style="width: auto; ">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                    <div>Tahun</div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center ">
-                                    <button class="btn btn-success text-white me-4">Tipe A</button>
-                                    <button class="btn btn-success text-white">Tipe B</button>
-                                </div>
-                            </div>
-                        </form>
+    <div class="d-flex justify-content-between align-items-center text-success">
+        <h1 class="display-6">Daftar Program<br>Grha Wredha Mulya</h1>
+        <button class="btn btn-secondary" onclick="goBack()">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+    </div>
+{{-- @if (session()->has('form1_data'))
+@json(session('form1_data'))
+@else
+    Tidak ada data dalam session
+@endif --}}
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="card shadow-sm" style="border: none">
+                <h5 class="card-header text-center text-success bg-success text-white">
+                    Pemilihan Tipe Rumah dan Lama Program 
+                </h5>
+                <div class="card-body">    
+                    <!-- Radio buttons as button groups -->
+            <form action="{{ route('daftargrha') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                    <div class="btn-group" role="group" aria-label="Tipe Rumah">
+                        <input type="radio" class="btn-check" name="program" id="tipeRumahA" value="21" autocomplete="off">
+                        <label class="btn btn-outline-success" for="tipeRumahA">Tipe Rumah A</label>
+    
+                        <input type="radio" class="btn-check" name="program" id="tipeRumahB" value="22" autocomplete="off">
+                        <label class="btn btn-outline-success" for="tipeRumahB">Tipe Rumah B</label>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-6 offset-lg-2 ">
-                <div class="text-success" style="font-size: 30px; ">Daftar Harga</div>
-                <div class="card ">    
-                        <div class="card-body rounded bg-success text-white">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <p style="font-size: 20px; font-weight:100">
-                                            Tipe A </p>
-                                    </div>
-                                    <div class="col-4">
-                                        <p style="font-size: 20px; font-weight:100">
-                                            Rp. 17.500.000/tahun</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-8">
-                                        <p style="font-size: 20px; font-weight:100">
-                                            Tipe B </p>
-                                    </div>
-                                    <div class="col-4">
-                                        <p style="font-size: 20px; font-weight:100">
-                                            Rp. 20.000.000/tahun</p>
-                                    </div>
-                                </div>
+    
+                    <!-- Dropdown for program duration -->
+                    <div class="mt-3">
+                        <label for="programDuration" class="form-label">Lama Program</label>
+                        <div class="input-group">
+                            <select class="form-select" id="programDuration" name="durasi">
+                                <option disabled selected >Pilih Lama Program</option>
+                                <option value="1">1 Tahun</option>
+                                <option value="2">2 Tahun</option>
+                                <option value="3">3 Tahun</option>
+                                <option value="4">4 Tahun</option>
+                                <option value="5">5 Tahun</option>
+                            </select>
+                            {{-- <span class="input-group-text"><i class="bi bi-chevron-down"></i></span> --}}
                         </div>
                     </div>
-            </div>
-            <div class="mt-3">
-                <div class="card">
-                    <div class="card-header bg-success">
-                        <p class="card-title text-white" style="font-size: 30px">Ringkasan Pembayaran</p>
+                    <div class="my-3 row">
+                        <label for="video" class="col-sm-12 col-form-label">Upload Video Bukti Kemandirian Lansia</label>
+                        <div class="col">
+                            <input type="file" class="form-control @error('video') is-invalid @enderror" name="video" id="video" accept="video/*">
+                            @error('video')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
-                    <div class="card-body" style="background-color: #EAFCE9">
-                        <table class="table table-striped">
-                              <tr>
-                                <td scope="row">Tanggal Pendaftaran</th>
-                                <td>: Mark</td>
-                              </tr>
-                              <tr>
-                                <td scope="row">Tanggal Mulai Program</th>
-                                <td>: Jacob</td>
-                              </tr>
-                              <tr>
-                                <td scope="row">Tanggal Berakhir Program</th>
-                                <td >: Larry the Bird</td>
-                              </tr>
-                              <tr>
-                                <td scope="row">Lama Program</th>
-                                <td >: Larry the Bird</td>
-                              </tr>
-                              <tr>
-                                <td scope="row">Tipe Hunian</th>
-                                <td >: Larry the Bird</td>
-                              </tr>
-                              <tr>
-                                <td scope="row">Biaya</th>
-                                <td >: Larry the Bird</td>
-                              </tr>
-                              <tr>
-                                <td scope="row">Total Harga</th>
-                                <td >: Larry the Bird</td>
-                              </tr>
-                          </table>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <button type="submit" class="btn btn-success">Daftar</button>
+                        </div>
                     </div>
-                </div>
-            </div>
-</div>
-
-{{-- <div class="container mt-5">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Select Date Range</h5>
-            <form>
-                <div class="mb-3">
-                    <label for="startDate" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 month')) }}" onchange="updateSummary()">
-                </div>
-                <div class="mb-3">
-                    <label for="endDate" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="endDate" name="endDate" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 month')) }}" onchange="updateSummary()">
                 </div>
             </form>
+            </div>
+        </div>
+        <div class="col-lg-7 offset-lg-1 text-success">
+            <div style="font-size: 30px;">Daftar Harga</div>
+            <div class="card shadow-sm" style="border: none">
+                {{-- <h5 class="card-header text-center text-success bg-success text-white">
+                    Daftar Harga
+                </h5> --}}
+                <div class="card-body rounded bg-success text-white shadow-sm">
+                    <div class="row">
+                        <div class="col-4">
+                            <h5 class="card-subtitle">Program</h5>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="card-subtitle">Tipe Rumah</h5>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="card-subtitle">Harga</h5>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4">
+                            <p class="card-subtitle">Grha Wredha Mulya</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="card-subtitle">Tipe Rumah A</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="card-subtitle">Rp. 17.500.000 / Tahun</p>
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-4">
+                            <p class="card-subtitle">Grha Wredha Mulya</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="card-subtitle">Tipe Rumah B</p>
+                        </div>
+                        <div class="col-4">
+                            <p class="card-subtitle">Rp. 20.000.000 / Tahun</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="card mt-3" id="paymentSummary" style="display: none;">
+    <!-- Informasi Video -->
+    <div class="card my-3 shadow-sm" style="border: none">
+        <h5 class="card-header text-success bg-success text-white">
+            Panduan Membuat Video Kemandirian Lansia 
+        </h5>
         <div class="card-body">
-            <h5 class="card-title">Payment Summary</h5>
-            <p id="summaryText"></p>
-            <div class="mb-3">
-                <label for="paymentMethod" class="form-label">Choose Payment Method</label>
-                <select class="form-control" id="paymentMethod">
-                    <option value="Tunai">Tunai</option>
-                    <option value="Transfer Bank">Transfer Bank</option>
-                </select>
-            </div>
-            <button type="button" class="btn btn-primary">Bayar</button>
+            <ul>
+                <li>Durasi video maksimal 1 menit.</li>
+                <li>Video mencakup aktivitas mandiri sehari-hari seperti makan, minum, berkebun, jalan - jalan atau lainnya.</li>
+                <li>Pastikan video diambil dalam satu kali pengambilan (one take), tanpa perlu pengeditan.</li>
+                <li>Pastikan kualitas video cukup jelas sehingga lansia dapat terlihat dengan baik.</li>
+                <li>Format video yang diperbolehkan: mp4, mov, avi, wmv.</li>
+                <li>Ukuran video maksimal 20MB.</li>
+            </ul>
         </div>
     </div>
 </div>
 
 <script>
-    function updateSummary() {
-        const startDate = new Date(document.getElementById('startDate').value);
-        const endDate = new Date(document.getElementById('endDate').value);
-        if (!isNaN(startDate.valueOf()) && !isNaN(endDate.valueOf()) && startDate <= endDate) {
-            let totalCost = 0;
-            let summary = "";
-            for (let day = new Date(startDate); day <= endDate; day.setDate(day.getDate() + 1)) {
-                const isWeekend = day.getDay() === 0 || day.getDay() === 6;
-                const costPerDay = isWeekend ? 50000 : 40000;
-                totalCost += costPerDay;
-                summary += `${day.toDateString()} @ ${isWeekend ? 'Rp50,000' : 'Rp40,000'}<br>`;
-            }
-            summary += `<strong>Total = Rp${totalCost.toLocaleString()}</strong>`;
-            document.getElementById('summaryText').innerHTML = summary;
-            document.getElementById('paymentSummary').style.display = 'block';
-        } else {
-            document.getElementById('paymentSummary').style.display = 'none';
-        }
-    }
-</script> --}}
+function goBack() {
+    window.history.back();
+}
+</script>
 @endsection

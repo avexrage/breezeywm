@@ -10,7 +10,6 @@
             <i class="bi bi-arrow-left"></i>
         </button>
     </div>
-    
     <!-- Modal -->
     {{-- <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -29,7 +28,6 @@
             </div>
         </div>
     </div> --}}
-
     <div class="row">
     <!-- Form Pilih Hari -->
         <div class="col-lg-4 col-md-6">

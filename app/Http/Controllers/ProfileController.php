@@ -67,13 +67,13 @@ class ProfileController extends Controller
         })->orderBy('created_at', 'desc')->get();
     
         // Retrieve 'DataPeserta' with videos for the logged-in user
-        $dataPesertaWithVideos = DataPeserta::where('user_id', Auth::id())
-                                             ->has('video')
-                                             ->get();
+        // $dataPesertaWithVideos = DataPeserta::where('user_id', Auth::id())
+        //                                      ->has('video')
+        //                                      ->orderBy('created_at', 'desc')->get();
     
         return view('layouts.riwayat', [
             'pendaftaran' => $pendaftaran,
-            'dataPesertaWithVideos' => $dataPesertaWithVideos
+            // 'dataPesertaWithVideos' => $dataPesertaWithVideos
         ]);
     }
     

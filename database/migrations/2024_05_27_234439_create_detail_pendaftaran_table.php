@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('tanggal'); // Tanggal program dipilih
             $table->string('tipe', 15);
             $table->integer('harga'); 
+            $table->integer('durasi')->nullable(); 
             $table->timestamps();
         });
     }
