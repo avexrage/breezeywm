@@ -1,8 +1,8 @@
 @extends('admin.mainlayout')
 
+@section('title', 'Dashboard')
+
 @section('content')
-    <div class="container">
-        <h1>Admin Dashboard</h1>
-        {{-- <p>Welcome, {{ Auth::guard('admin')->user()->name }}</p> --}}
-    </div>
+    <h1>Welcome to the Home Page</h1>
+    <p>This is the content of the home page.</p>
 @endsection

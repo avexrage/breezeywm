@@ -110,12 +110,13 @@
                             @if ($daftar->status_pendaftaran == 'Diterima')
                                 @php
                                     $showButton = false;
-                                    $statuspembayaran = $daftar->transaksi->status_pembayaran;
+                                    $statusPembayaran = isset($daftar->transaksi) ? $daftar->transaksi->status_pembayaran : null;
+                                    
                                     foreach ($daftar->program as $program) {
-                                        if (in_array($program->id_program, [21, 22])) {                
-                                            $showButton = true;
-                                                if($daftar->status_pendaftaran == 'Diterima' && $statuspembayaran){
-                                                    $showButton = true;
+                                        if (in_array($program->id_program, [21, 22])) {
+                                            // Jika status pembayaran adalah 'Lunas', jangan tampilkan tombol
+                                            if ($statusPembayaran !== 'Lunas') {
+                                                $showButton = true;
                                             }
                                         }
                                     }

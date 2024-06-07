@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController as ControllersAdminController;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +9,7 @@ use App\Http\Controllers\SesiController;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PendaftaranController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -32,14 +31,13 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 //ADMIN
-// Route::group(['middleware' => ['auth.admin']], function () {
-    Route::get('/admin', function () {
-        return view('admin.index');
-    });
-// });
+Route::group(['middleware' => ['auth:admin']], function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::get('/data-pendaftaran', [AdminController::class, 'dataPendaftaran'])->name('datapdftr');
+});
 
-Route::get('/admin/login', [ControllersAdminController::class, 'showLoginForm']);
-Route::post('/admin/login', [ControllersAdminController::class, 'login'])->name('admin.login');
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('adminlogin');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('adminloginpost');
 
 
 //LOGIN LOGOUT

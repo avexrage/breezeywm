@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Video;
 use App\Models\Program;
 use App\Models\Asuransi;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\NewRegistrationNotification;
 
 
 class PendaftaranController extends Controller
@@ -200,7 +202,11 @@ class PendaftaranController extends Controller
         $transaksi->save(); // Simpan entri transaksi    
         $request->session()->forget('form1_data'); // Clear session data
         
-        
+        // Kirim notifikasi ke admin
+        $admins = Admin::all(); // Ambil semua admin atau sesuai kebutuhan Anda
+        foreach ($admins as $admin) {
+            $admin->notify(new NewRegistrationNotification($dataPeserta, $program));
+        }
         return redirect()->route('bayar')->with('success', 'Pendaftaran berhasil disimpan.');
             }
         }
@@ -302,6 +308,12 @@ class PendaftaranController extends Controller
         // Hapus data peserta dari session
         $request->session()->forget('form1_data');
     
+        // Kirim notifikasi ke admin
+        $admins = Admin::all(); // Ambil semua admin atau sesuai kebutuhan Anda
+        foreach ($admins as $admin) {
+            $admin->notify(new NewRegistrationNotification($dataPeserta, $program));
+        }
+        
         // Kirim data video ke view
         return redirect()->route('riwayat')->with(['success' => 'Pendaftaran Berhasil Disimpan, Tunggu Admin Memverifikasi Video Kemandirian', 'video' => $video]);
         }

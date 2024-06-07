@@ -6,14 +6,14 @@
     <title>@yield('title') | Yayasan Wredha Mulya</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     @vite(['resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
 </head>
 <body class="d-flex flex-column min-vh-100 bg-light">
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg bg-body-light fixed-top navbar-white shadow-sm">
     <div class="container-fluid">
-        <a><img src="{{ asset('images/ywm.jpg') }}" alt="Yayasan Wredha Mulya Logo" width="70" height="64" class="me-auto"></a>
+        <a><img src="{{ asset('images/ywm.png') }}" alt="Yayasan Wredha Mulya Logo" width="70" height="64" class="me-auto"></a>
         <a class="navbar-brand navbar-brand-vertical text-success custom-margin" href="{{ route('home') }}">
             <span class="brand-top">Yayasan</span>
             <span class="brand-bottom">Wredha Mulya</span>

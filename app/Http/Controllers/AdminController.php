@@ -13,6 +13,11 @@ class AdminController extends Controller
         return view('admin.index');
     }
 
+    public function dataPendaftaran()
+    {
+        return view('admin.data-pendaftaran');
+    }
+
     public function showLoginForm()
     {
         return view('admin.admin-login');
@@ -26,7 +31,7 @@ class AdminController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-            return redirect()->intended(route('admin.index'));
+            return redirect()->intended(route('admin'));
         }
 
         return redirect()->back()->withInput($request->only('email', 'remember'));
