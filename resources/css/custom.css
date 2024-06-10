@@ -241,7 +241,7 @@ html, body {
 }
 
 #sidebar .nav-link {
-    color: #006400; /* Dark green text color */
+    color:#0D592C; /* Dark green text color */
     margin: 0.5rem 0; /* Margin between items */
     padding: 10px; /* Padding for better touch target */
     border-radius: 5px; /* Rounded corners */
@@ -249,7 +249,7 @@ html, body {
 }
 
 #sidebar .nav-link.active {
-    background-color: #006400; /* Dark green background for active item */
+    background-color: #0D592C; /* Dark green background for active item */
     color: #ffffff !important; /* White text color for active item */
 }
 
@@ -263,15 +263,29 @@ html, body {
     margin-right: 0.5rem; /* Margin between icon and text */
 }
 
-#main-content {
+#adminmain-content {
     margin-left: 250px; /* Margin to the left for main content */
     padding: 2rem; /* Padding for main content */
+}
+
+.breadcrumb-container {
+  height: 60px; /* Atur tinggi sesuai kebutuhan */
+  line-height: 45px; /* Sesuaikan dengan tinggi */
 }
 
 body {
     overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
+.collapse .nav-link {
+    margin-left: 1.5rem; /* Indentation for sub-menu items */
+}
+
+
+.custom-thead th {
+  background-color: #0D592C;
+  color: white; /* Optional: to change text color */
+}
 
 
 

@@ -3,10 +3,8 @@
 <head>
     <title>Bukti Pendaftaran</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
+        body {
+            font-family: Arial, sans-serif;
         }
         .header img {
             width: 70px;
@@ -19,11 +17,14 @@
             margin: 5px 0;
         }
         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
+        th, td { border: 1px solid black; padding: 8px; }
         th { text-align: left; }
+        /* Ensure the table, th, and td elements have solid borders */
+        table, th, td {
+            border: 1px solid black;
+        }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 <body>
     <div class="header">
@@ -33,7 +34,7 @@
     </div>
 
     <h2>Bukti Pendaftaran</h2>
-    <p>Tanggal Transaksi: {{ $transaksi->tanggal_transaksi }}</p>
+    <p>Tanggal Transaksi: {{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</p>
     <p>ID Transaksi: {{ $transaksi->id }}</p>
     <p>Penanggung Jawab: {{ $pendaftaran->dataPeserta->user->nama }}</p>
     <p>Nama Peserta: {{ $pendaftaran->dataPeserta->nama_lengkap_peserta }}</p>
@@ -65,6 +66,6 @@
         </tbody>
     </table>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

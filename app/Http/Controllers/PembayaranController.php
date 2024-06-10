@@ -111,6 +111,6 @@ class PembayaranController extends Controller
             $transaksi->save();
             
         }
-        return redirect()->route('bayar')->with('success', 'Bukti pembayaran berhasil diupload');
+        return redirect()->route('bayar')->with('success', 'Bukti pembayaran berhasil diupload, Admin akan memverifikasi pembayaran Anda');
     }
 }

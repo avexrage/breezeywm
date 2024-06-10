@@ -128,7 +128,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     @if ($showButton)
-                                        <button class="btn btn-danger text-white mt-2 w-100" onclick="location.href='{{ route('batalkanPendaftaran', $daftar->id) }}'"><strong>Batalkan Pembayaran</strong></button>
+                                        <button class="btn btn-danger text-white mt-2 w-100" data-bs-toggle="modal" data-bs-target="#confirmCancelModal{{ $daftar->id }}"><strong>Batalkan Pembayaran</strong></button>
                                     @endif
                                 </div>
                             @elseif($daftar->status_pendaftaran == 'Baru')
@@ -206,7 +206,7 @@
                     </h6>
                 </div>
             </div>
-            <!-- Modal -->
+            <!-- Modal Lanjutkan Pembayaran-->
             <div class="modal fade" id="paymentModal{{ $daftar->id }}" tabindex="-1" aria-labelledby="paymentModalLabel{{ $daftar->id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -229,6 +229,24 @@
                                 <button type="submit" class="btn btn-primary">Pilih</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Confirm Cancel Modal -->
+            <div class="modal fade" id="confirmCancelModal{{ $daftar->id }}" tabindex="-1" aria-labelledby="confirmCancelModalLabel{{ $daftar->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmCancelModalLabel{{ $daftar->id }}">Konfirmasi Pembatalan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin membatalkan pembayaran? Jika Anda membatalkan, maka pendaftaran akan dibatalkan.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                            <a href="{{ route('batalkanPendaftaran', $daftar->id) }}" class="btn btn-danger">Ya, Batalkan</a>
+                        </div>
                     </div>
                 </div>
             </div>

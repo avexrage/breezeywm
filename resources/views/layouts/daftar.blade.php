@@ -7,27 +7,9 @@
     <div class="d-flex justify-content-between align-items-center text-success">
         <h1 class="display-6">Daftar Program<br>Day Care</h1>
         <button class="btn btn-secondary" onclick="goBack()">
-            <i class="bi bi-arrow-left"></i>
+            <i class="bi bi-arrow-left"></i>Kembali
         </button>
     </div>
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cancelModalLabel">Batalkan Pendaftaran</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Anda yakin mau membatalkan pendaftaran? Data yang sudah disimpan akan hilang.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="{{ route('cancel') }}" class="btn btn-danger">Ya, Batalkan</a>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <div class="row">
     <!-- Form Pilih Hari -->
         <div class="col-lg-4 col-md-6">

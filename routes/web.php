@@ -31,13 +31,49 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 //ADMIN
-Route::group(['middleware' => ['auth:admin']], function () {
+Route::group(['middleware' => ['auth.admin']], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    Route::get('/data-pendaftaran', [AdminController::class, 'dataPendaftaran'])->name('datapdftr');
+    //Pendaftaran Day
+    Route::get('/data-pendaftaran/day-care', [AdminController::class, 'showPendaftaranDay'])->name('datapdftrday');
+    Route::get('/data-pendaftaran/day-care/cetak', [AdminController::class, 'showCetakPdftrDay'])->name('showcetakpdftrday');
+    Route::get('/data-pendaftaran/day-care/cetakdata', [AdminController::class, 'cetakPendaftaranDay'])->name('cetakpdftrday');
+    Route::post('/data-pendaftaran/day-care/update', [AdminController::class, 'updatePendaftaranDay'])->name('updatepdftrday');
+
+    //Pendaftaran Grha
+    Route::get('/data-pendaftaran/grha-wredha-mulya', [AdminController::class, 'showPendaftaranGrha'])->name('datapdftrgrha');
+    Route::get('/data-pendaftaran/grha-wredha-mulya/cetak', [AdminController::class, 'showCetakPdftrGrha'])->name('showcetakpdftrgrha');
+    Route::get('/data-pendaftaran/grha-wredha-mulya/cetakdata', [AdminController::class, 'cetakPendaftaranGrha'])->name('cetakpdftrgrha');
+    Route::post('/data-pendaftaran/grha-wredha-mulya/update', [AdminController::class, 'updatePendaftaranGrha'])->name('updatepdftrgrha');
+
+    //Pembayaran Day
+    Route::get('/data-pembayaran/day-care', [AdminController::class, 'showPembayaranDay'])->name('datapbyrday');
+    Route::get('/data-pembayaran/day-care/cetak', [AdminController::class, 'showCetakPbyrDay'])->name('showcetakpbyrday');
+    Route::get('/data-pembayaran/day-care/cetakdata', [AdminController::class, 'cetakPembayaranDay'])->name('cetakpbyrday');
+    Route::post('/data-pembayaran/day-care/update', [AdminController::class, 'updatePembayaranDay'])->name('updatepbyrday');
+
+    //Pembayaran Grha
+    Route::get('/data-pembayaran/grha-wredha-mulya', [AdminController::class, 'showPembayaranGrha'])->name('datapbyrgrha');
+    Route::get('/data-pembayaran/grha-wredha-mulya/cetak', [AdminController::class, 'showCetakPdftrGrha'])->name('showcetakpbyrgrha');
+    Route::get('/data-pembayaran/grha-wredha-mulya/cetakdata', [AdminController::class, 'cetakPembayaranGrha'])->name('cetakpbyrgrha');
+    Route::post('/data-pembayaran/grha-wredha-mulya/update', [AdminController::class, 'updatePembayaranGrha'])->name('updatepbyrgrha');
+
+    //Peserta Day
+    Route::get('/data-peserta/day-care', [AdminController::class, 'showPesertaDay'])->name('datapsrtday');
+    Route::get('/data-peserta/day-care/cetak', [AdminController::class, 'showCetakPsrtDay'])->name('showcetakpsrtday');
+    Route::get('/data-peserta/day-care/cetakdata', [AdminController::class, 'cetakPesertaDay'])->name('cetakpsrtday');
+    Route::post('/data-peserta/day-care/update', [AdminController::class, 'updatePesertaDay'])->name('updatepsrtday');
+
+    //Peserta Grha
+    Route::get('/data-peserta/grha-wredha-mulya', [AdminController::class, 'showPesertaGrha'])->name('datapsrtgrha');
+    Route::get('/data-peserta/grha-wredha-mulya/cetak', [AdminController::class, 'showCetakPsrtGrha'])->name('showcetakpsrtgrha');
+    Route::get('/data-peserta/grha-wredha-mulya/cetakdata', [AdminController::class, 'cetakPesertaGrha'])->name('cetakpsrtgrha');
+    Route::post('/data-peserta/grha-wredha-mulya/update', [AdminController::class, 'updatePesertaGrha'])->name('updatepsrtgrha');
 });
 
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('adminlogin');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('adminloginpost');
+Route::post('/admin/logout', [AdminController::class, 'adminLogout'])->name('adminlogout');
+
 
 
 //LOGIN LOGOUT
