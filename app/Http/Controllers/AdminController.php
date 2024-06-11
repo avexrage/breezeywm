@@ -74,6 +74,7 @@ class AdminController extends Controller
                 'pendaftaran.status_pendaftaran',
                 'pendaftaran.check_in',
                 'pendaftaran.check_out',
+                'pendaftaran.alasan',
                 'program.nama_program as program',
                 'detail_pendaftaran.tanggal',
                 'detail_pendaftaran.harga',
@@ -119,6 +120,7 @@ class AdminController extends Controller
                     'status_pendaftaran' => $row->first()->status_pendaftaran,
                     'check_in' => $row->first()->check_in,
                     'check_out' => $row->first()->check_out,
+                    'alasan' => $row->first()->alasan,
                     'program' => $row->first()->program,
                     'program_details' => $row->sortBy('tanggal')->values()->map(function ($detail) {
                         return [
@@ -253,6 +255,7 @@ class AdminController extends Controller
             ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
             ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
             ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
+            ->leftJoin('video', 'data_peserta.id', '=', 'video.data_peserta_id')
             ->select(
                 'pendaftaran.id as pendaftaran_id',
                 'data_peserta.nama_lengkap_peserta',
@@ -285,7 +288,8 @@ class AdminController extends Controller
                 'detail_pendaftaran.tanggal',
                 'detail_pendaftaran.harga',
                 'detail_pendaftaran.tipe as wisma',
-                'detail_pendaftaran.durasi'
+                'detail_pendaftaran.durasi',
+                'video.nama_file as video_file'
             )
             ->where('program.nama_program', 'LIKE', '%Grha Wredha Mulya%');
     
@@ -303,7 +307,6 @@ class AdminController extends Controller
     }
 
     public function cetakPendaftaranGrha(Request $request){
-    // Validasi input
         $request->validate([
             'start_date' => 'required|date',
             'end_date' => 'required|date'
@@ -352,7 +355,6 @@ class AdminController extends Controller
     }
 
     public function updatePendaftaranGrha(Request $request){
-        // Validasi input
         $request->validate([
             'pendaftaran_id' => 'required|exists:pendaftaran,id',
             'status_pendaftaran' => 'required|string',
@@ -380,6 +382,8 @@ class AdminController extends Controller
             $pendaftaran->check_out = Carbon::parse($request->tanggal_selesai);
         }
     
+        // Update alasan field
+        $pendaftaran->alasan = $request->alasan;
         $pendaftaran->save();
 
         // Ambil email user yang terkait dengan pendaftaran melalui relasi dataPeserta

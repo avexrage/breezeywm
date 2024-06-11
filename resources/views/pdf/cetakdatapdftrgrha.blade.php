@@ -56,7 +56,7 @@
                         <td>{{ $data->no_asuransi }}</td>
                         <td>{{ $data->tanggal_daftar ? \Carbon\Carbon::parse($data->check_in )->format('d/m/Y') : '-' }}</td>
                         <td>{{ $data->status_pendaftaran }}</td>
-                        <td>{{ $data->durasi }} tahun</td>
+                        <td>{{ $data->durasi }}</td>
                         <td>{{ $data->check_in ? \Carbon\Carbon::parse($data->check_in )->format('d/m/Y') : '-' }}</td>
                         <td>{{ $data->check_out ? \Carbon\Carbon::parse($data->check_out )->format('d/m/Y') : '-' }}</td>
                         <td>{{ $data->wisma }}</td>

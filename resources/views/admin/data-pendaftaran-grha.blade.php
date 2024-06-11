@@ -51,6 +51,7 @@
                         <th>Nama Asuransi</th>
                         <th>Nomor Asuransi</th>
                         <th>Tanggal Daftar</th>
+                        <th>Video Mandiri</th>
                         <th>Status Pendaftaran</th>
                         <th>Durasi</th>
                         <th>Tanggal Masuk</th>
@@ -66,6 +67,13 @@
                             <td>{{ $data->nama_asuransi }}</td>
                             <td>{{ $data->no_asuransi }}</td>
                             <td>{{ \Carbon\Carbon::parse($data->tanggal_daftar)->format('d/m/Y') }}</td>
+                            <td>
+                                @if($data->video_file)
+                                    <a href="{{ asset('storage/videos/' . $data->video_file) }}" download>{{ $data->video_file }}</a>
+                                @else
+                                    Tidak ada video
+                                @endif
+                            </td>
                             <td>
                                 @if($data->status_pendaftaran == 'Diterima')
                                     <span class="badge bg-success">{{ $data->status_pendaftaran }}</span>
@@ -247,7 +255,7 @@
                             <option value="Diterima">Diterima</option>
                             <option value="Ditolak">Ditolak</option>
                             <option value="Dibatalkan">Dibatalkan</option>
-                            <option value="Menunggu Jadwal">Menunggu Jadwal</option>
+                            <option value="Menunggu Jadwal">Menunggu Jadwal</option> 
                         </select>
                     </div>
                     <div class="mb-3">

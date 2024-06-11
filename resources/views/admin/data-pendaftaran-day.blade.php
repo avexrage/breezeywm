@@ -68,6 +68,8 @@
                             <td class="align-middle" rowspan="{{ $data['program_details']->count() }}">
                                 @if($data['status_pendaftaran'] == 'Diterima')
                                     <span class="badge bg-success">{{ $data['status_pendaftaran'] }}</span>
+                                @elseif($data['status_pendaftaran'] == 'Dibatalkan')
+                                    <span class="badge bg-danger">{{ $data['status_pendaftaran'] }}</span>
                                 @else
                                     <span class="badge bg-primary">{{ $data['status_pendaftaran'] }}</span>
                                 @endif
@@ -244,10 +246,12 @@
                             <option disabled selected>Pilih Status Pendaftaran</option>
                             <option value="Baru">Baru</option>
                             <option value="Diterima">Diterima</option>
-                            {{-- <option value="Ditolak">Ditolak</option>
                             <option value="Dibatalkan">Dibatalkan</option>
-                            <option value="Menunggu Jadwal">Menunggu Jadwal</option> --}}
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="alasan" class="form-label">Alasan</label>
+                        <textarea class="form-control" id="alasan" name="alasan"></textarea>
                     </div>
                     {{-- <div class="mb-3">
                         <label for="tanggalMulai" class="form-label">Masukkan Tanggal Mulai</label>
