@@ -17,7 +17,7 @@ class Registering
     public function handle(Request $request, Closure $next)
     {
         if(!session()->has('form1_data')){
-            return redirect()->route('bayarday');
+            return redirect()->route('bayar');
         }
         return $next($request);
     }

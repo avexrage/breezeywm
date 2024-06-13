@@ -10,6 +10,7 @@ use App\Models\Transaksi;
 use App\Models\DataPeserta;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
+use App\Models\RiwayatPendaftaran;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -32,24 +33,70 @@ class PendaftaranController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
-    {
+    public function create(Request $request){
         $programId = $request->id;
             $program = Program::find($programId);
             if (!$program) {
                 abort(404); // Program tidak ditemukan
             } // defaultProgram adalah nilai default
-        return view('layouts.create', compact('program'));
+            
+            // Add this line to retrieve the historical registrations
+            $riwayatPendaftarans = RiwayatPendaftaran::where('user_id', Auth::id())->get();
+        return view('layouts.create', compact('program', 'riwayatPendaftarans'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function showForm($program_id){
+        $program = Program::find($program_id);
+        if (!$program) {
+            abort(404, 'Program not found.');
+        }
+        $riwayatPendaftarans = RiwayatPendaftaran::where('user_id', Auth::id())->get();
+    
+        return view('layouts.create', compact('program', 'riwayatPendaftarans'));
+    }
+
+     public function storeRiwayatPendaftaran($program_id, $riwayat_id){
+         $riwayatPendaftaran = RiwayatPendaftaran::where('id', $riwayat_id)
+                                                  ->where('user_id', Auth::id())
+                                                  ->first();
+     
+         if ($riwayatPendaftaran) {
+             session([
+                 'form1_data' => [
+                     'datalama' => true, // Menandai penggunaan data lama
+                     'riwayat_pendaftaran_id' => $riwayatPendaftaran->id, // Menyimpan ID riwayat pendaftaran
+                     'data_peserta_id' => $riwayatPendaftaran->data_peserta_id,
+                     'program_id' => $program_id,
+                     'ktp' => $riwayatPendaftaran->ktp,
+                     'nama' => $riwayatPendaftaran->nama_lengkap_peserta,
+                     'alamat' => $riwayatPendaftaran->alamat,
+                     'tlahir' => $riwayatPendaftaran->tempat_lahir,
+                     'tgllhr' => $riwayatPendaftaran->tanggal_lahir,
+                     'kelamin' => $riwayatPendaftaran->jenis_kelamin,
+                     'agama' => $riwayatPendaftaran->agama,
+                     'statusNikah' => $riwayatPendaftaran->statusnikah,
+                     'pekerjaan' => $riwayatPendaftaran->pekerjaan,
+                     'penyakit' => $riwayatPendaftaran->riwayat_penyakit,
+                     'asuransi' => $riwayatPendaftaran->nama_asuransi,
+                     'noasuransi' => $riwayatPendaftaran->no_asuransi,
+                     'hobi' => $riwayatPendaftaran->hobi,
+                     'keahlian' => $riwayatPendaftaran->keahlian,
+                     'bahasa' => $riwayatPendaftaran->bahasa,
+                 ]
+             ]);
+     
+             if ($program_id == '111') {
+                 return redirect()->route('showdaftar')->with('success', 'Data Peserta Berhasil Disimpan');
+             } elseif ($program_id == '21') {
+                 return redirect()->route('showdaftar2')->with('success', 'Data Peserta Berhasil Disimpan');
+             } 
+         } else {
+             return redirect()->back()->with('error', 'Data riwayat pendaftaran tidak ditemukan.');
+         }
+    }
+     
+    public function store(Request $request){
+
         Session::flash('ktp', $request->ktp);
         Session::flash('nama_lengkap_peserta', $request->nama);
         Session::flash('alamat', $request->alamat);
@@ -103,12 +150,13 @@ class PendaftaranController extends Controller
         ]);
 
         $request->session()->put('form1_data', $validatedData);
+
+        // Redirect sesuai dengan program_id
         if ($request->program_id == '111') {
             return redirect()->route('showdaftar')->with('success', 'Data Peserta Berhasil Disimpan');
         } else if ($request->program_id == '21') {
             return redirect()->route('showdaftar2')->with('success', 'Data Peserta Berhasil Disimpan');
         }
-    
     }
 
     public function showDaftar (){
@@ -116,61 +164,93 @@ class PendaftaranController extends Controller
         return view('layouts.daftar');
     }
 
-    public function daftar( Request $request){
+    public function daftar(Request $request){
+    $validatedData = $request->validate([
+        'tanggal_mulai' => 'required|date',
+        'tanggal_selesai' => 'required|date',
+        'metodePembayaran' => 'required|in:Tunai,Transfer BRI',
+        'programs' => 'required|array',
+        'programs.*' => 'required|string|exists:program,id_program'
+    ],[
+        'tanggal_mulai.required'=> 'Tanggal mulai program wajib diisi',
+        'tanggal_selesai.required'=> 'Tanggal selesai program wajib diisi',
+        'metodePembayaran.required'=> 'Metode pembayaran wajib diisi',
+        'programs.required' => 'Pilih Tanggal Mulai dan Selesai Lagi.'
+    ]); 
 
-        $validatedData = $request->validate([
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'required|date',
-            'metodePembayaran' => 'required|in:Tunai,Transfer BRI',
-            'programs' => 'required|array',
-            'programs.*' => 'required|string|exists:program,id_program'
-        ],[
-            'tanggal_mulai.required'=> 'Tanggal mulai program wajib diisi',
-            'tanggal_selesai.required'=> 'Tanggal selesai program wajib diisi',
-            'metodePembayaran.required'=> 'Metode pembayaran wajib diisi',
-            'programs.required' => 'Pilih program yang ada.'
-        ]); 
+    $form1Data = $request->session()->get('form1_data');
 
-        $form1Data = $request->session()->get('form1_data');
-
-        if ($form1Data) {
-            //Simpan data ke tabel data_peserta
-        $dataPeserta = DataPeserta::create([
-            'program_id' => $form1Data['program_id'],
-            'ktp' => $form1Data['ktp'],
-            'nama_lengkap_peserta' => $form1Data['nama'],
-            'alamat' => $form1Data['alamat'],
-            'tempat_lahir' => $form1Data['tlahir'],
-            'tanggal_lahir' => $form1Data['tgllhr'],
-            'jenis_kelamin' => $form1Data['kelamin'],
-            'agama' => $form1Data['agama'],
-            'statusnikah' => $form1Data['statusNikah'],
-            'pekerjaan' => $form1Data['pekerjaan'],
-            'riwayat_penyakit' => $form1Data['penyakit'],
-            'hobi' => $form1Data['hobi'],
-            'keahlian' => $form1Data['keahlian'],
-            'bahasa' => $form1Data['bahasa'],
-            'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
-        ]);
-            //Simpan data ke tabel asuransi
-        if (!empty($form1Data['asuransi']) && !empty($form1Data['noasuransi'])) {
-            $dataAsuransi = new Asuransi([
-                'nama_asuransi' => $form1Data['asuransi'],
-                'no_asuransi' => $form1Data['noasuransi']
+    if ($form1Data) {  
+        if (isset($form1Data['datalama']) && $form1Data['datalama']) {
+            // Menggunakan data peserta lama
+            $peserta_id = $form1Data['data_peserta_id'];
+            $riwayat_id = $form1Data['riwayat_pendaftaran_id'];
+        } else {
+            // Simpan data ke tabel data_peserta
+            $dataPeserta = DataPeserta::create([
+                'program_id' => $form1Data['program_id'],
+                'ktp' => $form1Data['ktp'],
+                'nama_lengkap_peserta' => $form1Data['nama'],
+                'alamat' => $form1Data['alamat'],
+                'tempat_lahir' => $form1Data['tlahir'],
+                'tanggal_lahir' => $form1Data['tgllhr'],
+                'jenis_kelamin' => $form1Data['kelamin'],
+                'agama' => $form1Data['agama'],
+                'statusnikah' => $form1Data['statusNikah'],
+                'pekerjaan' => $form1Data['pekerjaan'],
+                'riwayat_penyakit' => $form1Data['penyakit'],
+                'hobi' => $form1Data['hobi'],
+                'keahlian' => $form1Data['keahlian'],
+                'bahasa' => $form1Data['bahasa'],
+                'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
             ]);
-       
-            $dataPeserta->save(); // Save data_peserta record
-            $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
-            $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
+            $peserta_id = $dataPeserta->id;
+
+            // Simpan data ke tabel asuransi
+            if (!empty($form1Data['asuransi']) && !empty($form1Data['noasuransi'])) {
+                $dataAsuransi = new Asuransi([
+                    'nama_asuransi' => $form1Data['asuransi'],
+                    'no_asuransi' => $form1Data['noasuransi']
+                ]);
+        
+                $dataPeserta->save(); // Save data_peserta record
+                $dataAsuransi->data_peserta_id = $dataPeserta->id; // Assign data_peserta_id to dataAsuransi
+                $dataAsuransi->save(); // Update dataAsuransi with data_peserta_id
+            }
+
+            // Simpan data ke tabel riwayat_pendaftaran
+            $riwayatPendaftaran = new RiwayatPendaftaran([
+                'user_id' => Auth::id(),
+                'nama_lengkap_peserta' => $form1Data['nama'],
+                'ktp' => $form1Data['ktp'],
+                'alamat' => $form1Data['alamat'],
+                'tempat_lahir' => $form1Data['tlahir'],
+                'tanggal_lahir' => $form1Data['tgllhr'],
+                'jenis_kelamin' => $form1Data['kelamin'],
+                'agama' => $form1Data['agama'],
+                'statusnikah' => $form1Data['statusNikah'],
+                'pekerjaan' => $form1Data['pekerjaan'],
+                'riwayat_penyakit' => $form1Data['penyakit'],
+                'nama_asuransi' => $form1Data['asuransi'],
+                'no_asuransi' => $form1Data['noasuransi'],
+                'hobi' => $form1Data['hobi'],
+                'keahlian' => $form1Data['keahlian'],
+                'bahasa' => $form1Data['bahasa'],
+                'tanggal_riwayat' => now(),
+                'data_peserta_id' => $peserta_id,
+            ]);
+            $riwayatPendaftaran->save();
+            $riwayat_id = $riwayatPendaftaran->id; // Ambil ID riwayat yang baru dibuat
         }
-            // Simpan data ke tabel pendaftaran
+
+        // Simpan data ke tabel pendaftaran
         $pendaftaran = new Pendaftaran([
             'check_in' => $validatedData['tanggal_mulai'],
             'check_out' => $validatedData['tanggal_selesai'],
             'metode_pembayaran' => $validatedData['metodePembayaran'],
-            'data_peserta_id' => $dataPeserta->id,
+            'data_peserta_id' => $peserta_id,     
+            'riwayat_pendaftaran_id' => $riwayat_id,     
         ]);
-    
         $pendaftaran->save(); // Simpan data pendaftaran
 
         foreach ($validatedData['programs'] as $date => $programId) {
@@ -185,26 +265,28 @@ class PendaftaranController extends Controller
             ]);
         }
         
-
         // Buat entri Transaksi
         $totalPrice = $request->input('summaryTotalPrice');
         if (!isset($totalPrice)) {
             return back()->withErrors(['summaryTotalPrice' => 'Total harga tidak ditemukan']);
-          }
+        }
           
         $transaksi = Transaksi::create([
             'total_harga' => $totalPrice,
             'pendaftaran_id' => $pendaftaran->id
-          ]);
-          
-
+        ]);
+        
         $transaksi->pendaftaran_id = $pendaftaran->id;
         $transaksi->save(); // Simpan entri transaksi    
-        $request->session()->forget('form1_data'); // Clear session data
 
-        return redirect()->route('bayar')->with('success', 'Pendaftaran berhasil disimpan.');
-            }
+        // $request->session()->forget('form1_data'); // Clear session data
+
+            return redirect()->route('bayar')->with('success', 'Pendaftaran berhasil disimpan.');
+        } else {
+            return back()->withErrors(['form1_data' => 'Data pendaftaran tidak ditemukan.']);
         }
+    }
+
 
     public function showDaftar2 (){
 

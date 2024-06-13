@@ -26,6 +26,10 @@ class DataPeserta extends Model
         return $this->hasOne(Pendaftaran::class);
     }
 
+    public function riwayatPendaftaran(){
+        return $this->hasOne(RiwayatPendaftaran::class);
+    }
+    
     public function video(){
         return $this->hasOne(Video::class);
     }

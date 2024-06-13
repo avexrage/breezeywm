@@ -32,7 +32,7 @@ class Pendaftaran extends Model
         return $this->hasOne(Transaksi::class);
     }
 
-    public function riywayatPdf(){
-        return $this->hasOne(RiwayatPdf::class);
+    public function riwayatPendaftaran(){
+        return $this->belongsToMany(RiwayatPendaftaran::class);
     }
 }

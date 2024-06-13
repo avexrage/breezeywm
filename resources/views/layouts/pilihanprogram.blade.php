@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<section class="asuransi-section mb-5" id="asuransi">
+{{-- <section class="asuransi-section mb-5" id="asuransi">
     <div class="head-container">
         <div class="title text-center mb-5">Kami Menerima Segala Jenis Asuransi</div>
     </div>
@@ -78,7 +78,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var confirmButtons = document.querySelectorAll('[data-bs-target="#confirmationModal"]');

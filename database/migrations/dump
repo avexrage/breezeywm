@@ -1,248 +1,31 @@
-<!-- user -->
+<!-- admin -->
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('user', function (Blueprint $table) {
-            $table->id();
-            $table->string('ktp', 16);
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('nama');
-            $table->string('no_hp', 13);
-            $table->string('alamat')->nullable();;
-            $table->string('pekerjaan')->nullable();;
-            $table->string('role')->nullable();;
-            $table->timestamps();
-        });
-    }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('user');
-    }
-};
+<!-- detailpendaftaran -->
+
+
+
+<!-- video -->
+
+
+
+<!-- buktitrsks -->
+
+
+
+<!-- transaksi -->
+
+
 
 <!-- pendaftaran -->
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('pendaftaran', function (Blueprint $table) {
-            $table->id();
-            $table->date('check_in'); 
-            $table->date('check_out'); 
-            $table->enum('metode_pembayaran',['Tunai', 'Transfer BRI']);
-            $table->foreignId('user_id')->constrained('user')->onDelete('cascade');
-            $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
-            $table->string('program_id', 5);
-            $table->foreign('program_id')->references('id_program')->on('program')->onDelete('cascade');
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('pendaftaran');
-    }
-};
-<!-- program -->
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('program', function (Blueprint $table) {
-            $table->string('id_program', 5)->primary(); 
-            $table->string('nama_program', 30);  
-            $table->string('tipe', 15);
-            $table->integer('harga'); 
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('program');
-    }
-};
-
-<!-- data_peserta -->
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    public function up()
-    {
-        Schema::create('data_peserta', function (Blueprint $table) {
-            $table->id();
-            $table->string('ktp', 16);
-            $table->string('nama_lengkap_peserta', 50);
-            $table->text('alamat');
-            $table->string('tempat_lahir', 30);
-            $table->date('tanggal_lahir');
-            $table->enum('jenis_kelamin',['Laki-laki', 'Perempuan']);
-            $table->enum('agama',['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']);
-            $table->enum('status',['Belum Kawin', 'Kawin', 'Cerai Mati', 'Cerai Hidup']);
-            $table->string('pekerjaan', 30);
-            $table->string('hobi', 30);
-            $table->string('keahlian', 30);
-            $table->string('bahasa', 30);
-        });
-
-    }
-    public function down()
-        {
-            Schema::dropIfExists('data_peserta');
-        }
-};
 
 
 <!-- asuransi -->
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('asuransi', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_asuransi', 50); 
-            $table->string('no_asuransi', 16);
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('asuransi');
-    }
-};
-
-<!-- transaksi -->
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('transaksi', function (Blueprint $table) {
-            $table->id();
-            $table->dateTime('tanggal_transaksi');
-            $table->enum('status_pembayaran',['Belum Lunas', 'Lunas']);
-            $table->integer('total_harga');
-            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('transaksi');
-    }
-};
 
 
-//asuransi new
+<!-- riwayatpendaftaran -->
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('asuransi', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_asuransi', 50); 
-            $table->string('no_asuransi', 16);
-            $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('asuransi');
-    }
-};

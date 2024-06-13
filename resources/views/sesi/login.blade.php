@@ -46,13 +46,16 @@
                             <label for="captcha">Berapa {{ $num1 }} + {{ $num2 }}?</label>
                             <input type="text" name="captcha" class="form-control" placeholder="Jawab" required>
                         </div>
-                        <div class="d-flex justify-content-between my-3">
+                        <div class="d-flex justify-content-between mt-3">
                             <div>
-                                <label>Tidak punya akun? <a href="{{ route('register')}}" class="text-success link-underline-light">Daftar disini</a></label>
+                                <label>Tidak punya akun?</label>
                             </div>
                             <div>
                                 <a href="{{ route('password.request') }}" class="text-success link-underline-light">Lupa password?</a>
                             </div>
+                        </div>
+                        <div class="my-2">
+                            <a href="{{ route('register')}}" class="text-success link-underline-light">Daftar disini</a>
                         </div>
                             <button name="submit" type="submit" class="btn btn-success btn-fixed">Login</button>      
                         </form>

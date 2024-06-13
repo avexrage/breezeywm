@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PendaftaranController;
+use App\Models\Pendaftaran;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -159,8 +160,11 @@ Route::get('/test', function (){
 });
 
 //FORM PENDAFTARAN
-Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);        
+Route::get('/form', [PendaftaranController::class, 'create'])->name('tampilform')->middleware(['auth', 'verified']);
+Route::get('/form/{program_id}', [PendaftaranController::class, 'showForm'])->name('showForm');
+Route::post('/simpan/{program_id}/{riwayat_id}', [PendaftaranController::class, 'storeRiwayatPendaftaran'])->name('datalama');
 Route::post('/form', [PendaftaranController::class, 'store'])->name('simpanform');
+
 
 //DAY CARE
 Route::get('/daftar', [PendaftaranController::class, 'showDaftar'])->name('showdaftar')->middleware('register');
