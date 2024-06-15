@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bukti_transaksi', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_file');
-            $table->date('tanggal_upload');
-            $table->foreignId('transaksi_id')->constrained('transaksi')->onDelete('cascade');
+        Schema::table('pendaftaran', function (Blueprint $table) {
+            $table->foreignId('user_id')->after('peserta_id')->constrained('user')->onDelete('cascade');
         });
     }
 
@@ -28,6 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bukti_transaksi');
+        Schema::table('pendaftaran', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
     }
 };

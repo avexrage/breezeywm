@@ -49,7 +49,7 @@ class CustomVerifyEmail extends VerifyEmail
                     ->greeting('Halo! Terima Kasih Sudah Mendaftar')
                     ->line('Klik tombol di bawah untuk verifikasi email anda')
                     ->action('Verifikasi Email', $verificationUrl)
-                    ->line('Jika terdapat masalah verifikasi email, hubungi admin Yayasan Wredha Mulya di WhatsApp: 0895-3912-32829');
+                    ->line('Jika terdapat masalah verifikasi email, hubungi admin Yayasan Wredha Mulya di WhatsApp: wa.me/+62895391232829');
     }
 
     protected function verificationUrl($notifiable)

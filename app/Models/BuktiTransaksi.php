@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BuktiTrsk extends Model
+class BuktiTransaksi extends Model
 {
     use HasFactory;
 
-    protected $table = 'bukti_trsk';
+    protected $table = 'bukti_transaksi';
     public $timestamps = false;
     protected $fillable = [
         'nama_file',

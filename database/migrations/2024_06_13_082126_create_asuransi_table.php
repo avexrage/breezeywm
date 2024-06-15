@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_asuransi', 50); 
             $table->string('no_asuransi', 16);
-            $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
+            $table->foreignId('peserta_id')->constrained('peserta')->onDelete('cascade');
         });
     }
 

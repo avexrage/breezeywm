@@ -93,7 +93,7 @@
                                 <p class="card-text text-center"><strong>Nama Peserta</strong></p>
                             </div>
                             <div class="col-md-10 d-flex align-items-center">:&nbsp;
-                                <p class="card-text text-center">{{ $daftar->dataPeserta->nama_lengkap_peserta }}</p>
+                                <p class="card-text text-center">{{ $daftar->peserta->nama_lengkap_peserta }}</p>
                             </div>
                         </div>
                         <div class="row">

@@ -18,7 +18,7 @@ class Video extends Model
         'data_peserta_id'
     ];
 
-    public function data_peserta(){
-        return $this->belongsTo(DataPeserta::class);
+    public function peserta(){
+        return $this->belongsTo(Peserta::class);
     }
 }

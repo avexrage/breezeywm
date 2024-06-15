@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('data_peserta', function (Blueprint $table) {
+        Schema::create('peserta', function (Blueprint $table) {
             $table->id();
             $table->string('ktp', 16);
             $table->string('nama_lengkap_peserta', 50);
@@ -31,6 +31,6 @@ return new class extends Migration
     }
     public function down()
         {
-            Schema::dropIfExists('data_peserta');
+            Schema::dropIfExists('peserta');
         }
 };

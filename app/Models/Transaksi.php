@@ -22,7 +22,7 @@ class Transaksi extends Model
         return $this->belongsTo(Pendaftaran::class);
     }
     
-    public function buktiTrnsk(){
-        return $this->hasOne(BuktiTrsk::class);
+    public function buktiTransaksi(){
+        return $this->hasOne(BuktiTransaksi::class);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BuktiTrsk;
+use App\Models\BuktiTransaksi;
 use App\Models\Transaksi;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class PembayaranController extends Controller
 {
     public function bayar(){
     // Ambil semua pendaftaran untuk user yang sedang login
-    $pendaftaranList = Pendaftaran::whereHas('dataPeserta', function ($query) {
+    $pendaftaranList = Pendaftaran::whereHas('peserta', function ($query) {
         $query->where('user_id', Auth::id());
     })->orderBy('created_at', 'desc')->get();
 
@@ -37,7 +37,7 @@ class PembayaranController extends Controller
                 'programs' => $pendaftaran->program,
                 'check_in' => $pendaftaran->check_in,
                 'check_out' => $pendaftaran->check_out,
-                'nama_lengkap_peserta' =>  $pendaftaran->dataPeserta->nama_lengkap_peserta,
+                'nama_lengkap_peserta' =>  $pendaftaran->peserta->nama_lengkap_peserta,
                 'durasi' => $durasi,
             ];
         }
@@ -100,7 +100,7 @@ class PembayaranController extends Controller
             $transaksi = Transaksi::where('pendaftaran_id', $pendaftaran->id)->first();
 
             // Simpan informasi file ke tabel bukti_trsk
-            BuktiTrsk::updateOrCreate(
+            BuktiTransaksi::updateOrCreate(
                 ['transaksi_id' => $transaksi->id],
                 ['nama_file' => $path, 'tanggal_upload' => now()]
             );

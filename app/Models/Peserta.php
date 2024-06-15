@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DataPeserta extends Model
+class Peserta extends Model
 {
     use HasFactory;
 
     protected $fillable = ['ktp', 'nama_lengkap_peserta', 'alamat', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
     'agama', 'statusnikah', 'pekerjaan', 'riwayat_penyakit', 'hobi', 'keahlian', 'bahasa', 'user_id'];
 
-    protected $table = 'data_peserta';
+    protected $table = 'peserta';
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -23,11 +23,7 @@ class DataPeserta extends Model
     }
 
     public function pendaftaran(){
-        return $this->hasOne(Pendaftaran::class);
-    }
-
-    public function riwayatPendaftaran(){
-        return $this->hasOne(RiwayatPendaftaran::class);
+        return $this->hasMany(Pendaftaran::class);
     }
     
     public function video(){

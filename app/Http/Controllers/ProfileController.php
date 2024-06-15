@@ -62,7 +62,7 @@ class ProfileController extends Controller
 
     public function showRiwayat() {
         // Retrieve all 'Pendaftaran' for the logged-in user
-        $pendaftaran = Pendaftaran::whereHas('dataPeserta', function($query) {
+        $pendaftaran = Pendaftaran::whereHas('peserta', function($query) {
             $query->where('user_id', Auth::id());
         })->orderBy('created_at', 'desc')->get();
     

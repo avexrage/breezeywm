@@ -20,8 +20,7 @@ return new class extends Migration
             $table->enum('metode_pembayaran',['Tunai', 'Transfer BRI'])->nullable();
             $table->enum('status_pendaftaran',['Baru', 'Ditolak', 'Diterima', 'Menunggu Jadwal', 'Dibatalkan'])->default('Baru');
             $table->text('alasan')->nullable();
-            $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
-            $table->foreignId('riwayat_pendaftaran_id')->constrained('riwayat_pendaftaran')->onDelete('cascade');
+            $table->foreignId('peserta_id')->constrained('peserta')->onDelete('cascade');
             $table->timestamps(); // Tambahkan kolom timestamps
         });
     }

@@ -150,65 +150,65 @@ class AdminController extends Controller
     }
 
     public function cetakPendaftaranDay(Request $request){
-    // Validasi input
-    $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date'
-        ], [
-            'start_date.required' => 'Tanggal Awal Pendaftaran Wajib diisi',
-            'start_date.date' => 'Tanggal Awal Pendaftaran harus berupa tanggal yang valid',
-            'end_date.required' => 'Tanggal Akhir Pendaftaran Wajib diisi',
-            'end_date.date' => 'Tanggal Akhir Pendaftaran harus berupa tanggal yang valid'
-        ]);
+        // Validasi input
+        $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date'
+            ], [
+                'start_date.required' => 'Tanggal Awal Pendaftaran Wajib diisi',
+                'start_date.date' => 'Tanggal Awal Pendaftaran harus berupa tanggal yang valid',
+                'end_date.required' => 'Tanggal Akhir Pendaftaran Wajib diisi',
+                'end_date.date' => 'Tanggal Akhir Pendaftaran harus berupa tanggal yang valid'
+            ]);
 
-            $startDate = $request->get('start_date');
-            $endDate = $request->get('end_date');
-        $pendaftaran = DB::table('data_peserta')
-        ->join('user', 'data_peserta.user_id', '=', 'user.id')
-        ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-        ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
-        ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
-        ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
-        ->select(
-            'pendaftaran.id as pendaftaran_id',
-            'data_peserta.nama_lengkap_peserta',
-            'asuransi.nama_asuransi',
-            'asuransi.no_asuransi',
-            'pendaftaran.created_at as tanggal_daftar',
-            'pendaftaran.status_pendaftaran',
-            'pendaftaran.check_in',
-            'pendaftaran.check_out',
-            'program.nama_program as program',
-            'detail_pendaftaran.tanggal',
-            'detail_pendaftaran.harga',
-            'detail_pendaftaran.tipe as waktu'
-        )
-        ->whereDate('pendaftaran.created_at', '>=', $startDate)
-        ->whereDate('pendaftaran.created_at', '<=', $endDate)
-        ->where('program.nama_program', 'LIKE', '%Day Care%')
-        ->orderBy('pendaftaran.created_at', 'desc')
-        ->get();
+                $startDate = $request->get('start_date');
+                $endDate = $request->get('end_date');
+            $pendaftaran = DB::table('data_peserta')
+            ->join('user', 'data_peserta.user_id', '=', 'user.id')
+            ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
+            ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+            ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
+            ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
+            ->select(
+                'pendaftaran.id as pendaftaran_id',
+                'data_peserta.nama_lengkap_peserta',
+                'asuransi.nama_asuransi',
+                'asuransi.no_asuransi',
+                'pendaftaran.created_at as tanggal_daftar',
+                'pendaftaran.status_pendaftaran',
+                'pendaftaran.check_in',
+                'pendaftaran.check_out',
+                'program.nama_program as program',
+                'detail_pendaftaran.tanggal',
+                'detail_pendaftaran.harga',
+                'detail_pendaftaran.tipe as waktu'
+            )
+            ->whereDate('pendaftaran.created_at', '>=', $startDate)
+            ->whereDate('pendaftaran.created_at', '<=', $endDate)
+            ->where('program.nama_program', 'LIKE', '%Day Care%')
+            ->orderBy('pendaftaran.created_at', 'desc')
+            ->get();
 
-        $groupedData = $pendaftaran->groupBy('pendaftaran_id')->map(function ($row) {
-            return [
-                'nama_lengkap_peserta' => $row->first()->nama_lengkap_peserta,
-                'nama_asuransi' => $row->first()->nama_asuransi,
-                'no_asuransi' => $row->first()->no_asuransi,
-                'tanggal_daftar' => $row->first()->tanggal_daftar,
-                'status_pendaftaran' => $row->first()->status_pendaftaran,
-                'check_in' => $row->first()->check_in,
-                'check_out' => $row->first()->check_out,
-                'program_details' => $row->sortBy('tanggal')->values()->map(function ($detail) {
-                    return [
-                        'tanggal' => $detail->tanggal,
-                        'harga' => $detail->harga,
-                        'waktu' => $detail->waktu
-                    ];
-                })
-            ];
-        });
+            $groupedData = $pendaftaran->groupBy('pendaftaran_id')->map(function ($row) {
+                return [
+                    'nama_lengkap_peserta' => $row->first()->nama_lengkap_peserta,
+                    'nama_asuransi' => $row->first()->nama_asuransi,
+                    'no_asuransi' => $row->first()->no_asuransi,
+                    'tanggal_daftar' => $row->first()->tanggal_daftar,
+                    'status_pendaftaran' => $row->first()->status_pendaftaran,
+                    'check_in' => $row->first()->check_in,
+                    'check_out' => $row->first()->check_out,
+                    'program_details' => $row->sortBy('tanggal')->values()->map(function ($detail) {
+                        return [
+                            'tanggal' => $detail->tanggal,
+                            'harga' => $detail->harga,
+                            'waktu' => $detail->waktu
+                        ];
+                    })
+                ];
+            });
 
-    $pdf = Pdf::loadView('pdf.cetakdatapdftrday', [
+        $pdf = Pdf::loadView('pdf.cetakdatapdftrday', [
         'groupedData' => $groupedData, 
         'startDate' => $startDate, 
         'endDate' => $endDate])

@@ -55,14 +55,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function dataPeserta(){
-        return $this->hasMany(DataPeserta::class);
+    public function peserta(){
+        return $this->hasMany(Peserta::class);
     }
 
-    public function riwayatPendaftaran(){
-        return $this->hasMany(RiwayatPendaftaran::class);
+    public function pendaftaran(){
+        return $this->hasMany(Pendaftaran::class);
     }
-    
+
     public function sendEmailVerificationNotification(){
     $this->notify(new CustomVerifyEmail);
     }

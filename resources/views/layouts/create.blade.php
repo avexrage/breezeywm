@@ -21,44 +21,6 @@
             </div>
         </div>
 
-        <div id="oldDataCards" style="display:none;">
-            @forelse ($riwayatPendaftarans as $riwayatPendaftaran)
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Data Riwayat Pendaftaran</h5>
-                    <p class="card-text">
-                        <strong>Nama:</strong> {{ $riwayatPendaftaran->nama_lengkap_peserta }}<br>
-                        <strong>KTP:</strong> {{ $riwayatPendaftaran->ktp }}<br>
-                        <strong>Alamat:</strong> {{ $riwayatPendaftaran->alamat }}<br>
-                        <strong>Tempat Lahir:</strong> {{ $riwayatPendaftaran->tempat_lahir }}<br>
-                        <strong>Tanggal Lahir:</strong> {{ $riwayatPendaftaran->tanggal_lahir }}<br>
-                        <strong>Jenis Kelamin:</strong> {{ $riwayatPendaftaran->jenis_kelamin }}<br>
-                        <strong>Agama:</strong> {{ $riwayatPendaftaran->agama }}<br>
-                        <strong>Status Nikah:</strong> {{ $riwayatPendaftaran->statusnikah }}<br>
-                        <strong>Pekerjaan:</strong> {{ $riwayatPendaftaran->pekerjaan }}<br>
-                        <strong>Riwayat Penyakit:</strong> {{ $riwayatPendaftaran->riwayat_penyakit }}<br>
-                        <strong>Asuransi:</strong> {{ $riwayatPendaftaran->nama_asuransi }}<br>
-                        <strong>No Asuransi:</strong> {{ $riwayatPendaftaran->no_asuransi }}<br>
-                        <strong>Hobi:</strong> {{ $riwayatPendaftaran->hobi }}<br>
-                        <strong>Keahlian:</strong> {{ $riwayatPendaftaran->keahlian }}<br>
-                        <strong>Bahasa:</strong> {{ $riwayatPendaftaran->bahasa }}<br>
-                    </p>
-                    <form action="{{ route('datalama', ['program_id' => $program->id_program, 'riwayat_id' => $riwayatPendaftaran->id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Gunakan Data Ini</button>
-                    </form>                
-                </div>
-            </div>
-            @empty
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Data Riwayat Pendaftaran</h5>
-                    <p class="card-text">Anda belum pernah melakukan pendaftaran.</p>
-                </div>
-            </div>
-            @endforelse
-        </div>
-
         <form action="{{ route('simpanform') }}" method="POST" id="newDataForm" style="display:none;">
             @csrf
             <input type="hidden" name="program_id" value="{{ $program->id_program }}">

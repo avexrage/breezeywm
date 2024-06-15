@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_file');
             $table->date('tanggal_upload');
             $table->integer('ukuran_file');
-            $table->foreignId('data_peserta_id')->constrained('data_peserta')->onDelete('cascade');
+            $table->foreignId('peserta_id')->constrained('peserta')->onDelete('cascade');
         });
     }
 
