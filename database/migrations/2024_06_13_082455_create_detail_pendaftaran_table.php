@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
             $table->string('program_id', 5);
             $table->foreign('program_id')->references('id_program')->on('program')->onDelete('cascade');
-            $table->date('tanggal'); // Tanggal program dipilih
+            $table->date('tanggal')->nullable(); 
             $table->string('tipe', 15);
             $table->integer('harga'); 
             $table->integer('durasi')->nullable(); 

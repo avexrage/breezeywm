@@ -18,7 +18,9 @@
                     <p style="font-size: 30px;">Pilih Hari</p>
                     <form action="{{ route('daftarday') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="peserta_id" value="{{ $peserta->id }}"> <!-- Tambahkan baris ini -->
+                        @if(isset($peserta))
+                        <input type="hidden" name="peserta_id" value="{{ $peserta->id }}">
+                        @endif
                         <div class="mb-3">
                             <label class="form-label" for="tanggal_mulai">Tanggal Mulai:</label>
                             <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai">

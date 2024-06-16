@@ -20,7 +20,36 @@
                 <button class="btn btn-success" onclick="showNewDataForm()">Daftar Baru</button>
             </div>
         </div>
-
+        <div id="oldDataCards" style="display:none;">
+            @forelse ($pesertas as $peserta)
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $peserta->nama_lengkap_peserta }}</h5>
+                        <p class="card-text">
+                            KTP: {{ $peserta->ktp }}<br>
+                            Alamat: {{ $peserta->alamat }}<br>
+                            Tempat Lahir: {{ $peserta->tempat_lahir }}<br>
+                            Tanggal Lahir: {{ $peserta->tanggal_lahir }}<br>
+                            Jenis Kelamin: {{ $peserta->jenis_kelamin }}<br>
+                            Agama: {{ $peserta->agama }}<br>
+                            Status Nikah: {{ $peserta->statusnikah }}<br>
+                            Pekerjaan: {{ $peserta->pekerjaan }}<br>
+                            Riwayat Penyakit: {{ $peserta->riwayat_penyakit }}<br>
+                            Nama Asuransi: {{ $peserta->asuransi->nama_asuransi ?? 'Tidak Ada' }}<br>
+                            Nomor Asuransi: {{ $peserta->asuransi->no_asuransi ?? 'Tidak Ada' }}<br>
+                        </p>
+                        <button class="btn btn-primary" onclick="useOldData({{ $peserta->id }})">Pilih</button>
+                    </div>
+                </div>
+            @empty
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p class="card-text">Belum ada data lama, silahkan mendaftar dengan data baru.</p>
+                    </div>
+                </div>
+            @endforelse
+        </div>
+        
         <form action="{{ route('simpanform') }}" method="POST" id="newDataForm" style="display:none;">
             @csrf
             <input type="hidden" name="program_id" value="{{ $program->id_program }}">
@@ -171,6 +200,9 @@
         function showOldData() {
             document.getElementById('oldDataCards').style.display = 'block';
             document.getElementById('newDataForm').style.display = 'none';
+        }
+        function useOldData(pesertaId) {
+            window.location.href = '{{ route("showdaftar") }}?peserta_id=' + pesertaId;
         }
     </script>
 </body>

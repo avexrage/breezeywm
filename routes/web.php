@@ -174,7 +174,6 @@ Route::post('/daftar/grha', [PendaftaranController::class, 'daftar2'])->name('da
 Route::get('/lanjutkan-pembayaran/{id}', [PendaftaranController::class, 'lanjutkanPembayaran'])->name('lanjutkanPembayaran');
 Route::get('/batalkan-pendaftaran/{id}', [PendaftaranController::class, 'batalkanPendaftaran'])->name('batalkanPendaftaran');
 
-
 Route::get('/cancel', [PendaftaranController::class, 'cancelRegistration'])->name('cancel');
 
 //Pembayaran

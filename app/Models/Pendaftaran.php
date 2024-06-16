@@ -15,7 +15,7 @@ class Pendaftaran extends Model
         'check_out',
         'metode_pembayaran',
         'program_id',
-        'data_peserta_id',
+        'peserta_id',
         'user_id'
     ];
 

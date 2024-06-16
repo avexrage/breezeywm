@@ -36,8 +36,8 @@
     <h2>Bukti Pendaftaran</h2>
     <p>Tanggal Transaksi: {{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y') }}</p>
     <p>ID Transaksi: {{ $transaksi->id }}</p>
-    <p>Penanggung Jawab: {{ $pendaftaran->dataPeserta->user->nama }}</p>
-    <p>Nama Peserta: {{ $pendaftaran->dataPeserta->nama_lengkap_peserta }}</p>
+    <p>Penanggung Jawab: {{ $pendaftaran->peserta->user->nama }}</p>
+    <p>Nama Peserta: {{ $pendaftaran->peserta->nama_lengkap_peserta }}</p>
     <p>Metode Pembayaran: {{ $pendaftaran->metode_pembayaran }}</p>
     <p>Status Pembayaran: {{ $transaksi->status_pembayaran }}</p>
     <h4>Detail Program</h4>

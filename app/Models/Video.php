@@ -15,7 +15,7 @@ class Video extends Model
         'nama_file',
         'tanggal_upload',
         'ukuran_file',
-        'data_peserta_id'
+        'peserta_id'
     ];
 
     public function peserta(){
