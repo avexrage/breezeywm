@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\Peserta;
 use App\Models\Program;
 use App\Models\Asuransi;
 use App\Models\Transaksi;
-use App\Models\Peserta;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use App\Notifications\NewRegistrationNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PendaftaranBerhasilEmail;
 
 
 class PendaftaranController extends Controller
@@ -137,21 +138,32 @@ class PendaftaranController extends Controller
         } else {
             // Menggunakan data baru dari session
             $form1Data = $request->session()->get('form1_data');
+            
+            $nama_lengkap = ucwords($form1Data['nama']);
+            $alamat = ucwords($form1Data['alamat']);
+            $tempat_lahir = ucwords($form1Data['tlahir']);
+            $pekerjaan = ucwords($form1Data['pekerjaan']);
+            $riwayat_penyakit = ucwords($form1Data['penyakit']);
+            $hobi = ucwords($form1Data['hobi']);
+            $keahlian = ucwords($form1Data['keahlian']);
+            $bahasa = ucwords($form1Data['bahasa']);
+            $nama_asuransi = ucwords($form1Data['asuransi']);
+            
             $peserta = Peserta::create([
                 'program_id' => $form1Data['program_id'],
                 'ktp' => $form1Data['ktp'],
-                'nama_lengkap_peserta' => $form1Data['nama'],
-                'alamat' => $form1Data['alamat'],
-                'tempat_lahir' => $form1Data['tlahir'],
+                'nama_lengkap_peserta' => $nama_lengkap,
+                'alamat' => $alamat,
+                'tempat_lahir' => $tempat_lahir,
                 'tanggal_lahir' => $form1Data['tgllhr'],
                 'jenis_kelamin' => $form1Data['kelamin'],
                 'agama' => $form1Data['agama'],
                 'statusnikah' => $form1Data['statusNikah'],
-                'pekerjaan' => $form1Data['pekerjaan'],
-                'riwayat_penyakit' => $form1Data['penyakit'],
-                'hobi' => $form1Data['hobi'],
-                'keahlian' => $form1Data['keahlian'],
-                'bahasa' => $form1Data['bahasa'],
+                'pekerjaan' => $pekerjaan,
+                'riwayat_penyakit' => $riwayat_penyakit,
+                'hobi' => $hobi,
+                'keahlian' => $keahlian,
+                'bahasa' => $bahasa,
                 'user_id' => Auth::id()
             ]);
     
@@ -202,13 +214,19 @@ class PendaftaranController extends Controller
             'pendaftaran_id' => $pendaftaran->id
         ]);
     
+        // Kirim notifikasi email ke pengguna
+        Notification::send(Auth::user(), new PendaftaranBerhasilEmail($pendaftaran, $peserta));
+
         return redirect()->route('bayar')->with('success', 'Pendaftaran berhasil disimpan.');
     }
       
 
-    public function showDaftar2 (){
-
-        return view('layouts.daftar2');
+    public function showDaftar2 (Request $request){
+        $peserta = null;
+        if ($request->has('peserta_id')) {
+            $peserta = Peserta::with('asuransi')->find($request->input('peserta_id'));
+        }
+        return view('layouts.daftar2', compact('peserta'));
     }
 
     public function daftar2(Request $request) {
@@ -222,43 +240,49 @@ class PendaftaranController extends Controller
             'video.required' => 'Bukti Video Kemandirian Lansia Wajib Diisi',
             'video.max' => 'Besar maksimal ukuran video 20MB',
             'video.mimes' => 'Tipe video yang diterima adalah mp4, mov, avi, wmv'
-        ]); 
-    
-        // Dapatkan data peserta dari session
-        $form1Data = $request->session()->get('form1_data');
-    
-        if ($form1Data) {
-        // Simpan data ke tabel data_peserta
-        $peserta = Peserta::create([
-            'program_id' => $form1Data['program_id'],
-            'ktp' => $form1Data['ktp'],
-            'nama_lengkap_peserta' => $form1Data['nama'],
-            'alamat' => $form1Data['alamat'],
-            'tempat_lahir' => $form1Data['tlahir'],
-            'tanggal_lahir' => $form1Data['tgllhr'],
-            'jenis_kelamin' => $form1Data['kelamin'],
-            'agama' => $form1Data['agama'],
-            'statusnikah' => $form1Data['statusNikah'],
-            'pekerjaan' => $form1Data['pekerjaan'],
-            'riwayat_penyakit' => $form1Data['penyakit'],
-            'hobi' => $form1Data['hobi'],
-            'keahlian' => $form1Data['keahlian'],
-            'bahasa' => $form1Data['bahasa'],
-            'user_id' => Auth::id() // Mengaitkan langsung pada saat pembuatan
         ]);
-
-        // Simpan data ke tabel asuransi
-        if (!empty($form1Data['asuransi']) && !empty($form1Data['noasuransi'])) {
-            $asuransi = new Asuransi([
-                'nama_asuransi' => $form1Data['asuransi'],
-                'no_asuransi' => $form1Data['noasuransi']
-            ]);
-        
-            $peserta->save(); // Save data_peserta record
-            $asuransi->peserta_id = $peserta->id; // Assign data_peserta_id to dataAsuransi
-            $asuransi->save(); // Update dataAsuransi with data_peserta_id
+    
+        if ($request->has('peserta_id')) {
+            // Menggunakan data peserta lama
+            $peserta = Peserta::with('asuransi')->findOrFail($request->input('peserta_id'));
+        } else {
+            // Dapatkan data peserta dari session
+            $form1Data = $request->session()->get('form1_data');
+    
+            if ($form1Data) {
+                $peserta = Peserta::create([
+                    'program_id' => $form1Data['program_id'],
+                    'ktp' => $form1Data['ktp'],
+                    'nama_lengkap_peserta' => ucwords($form1Data['nama']),
+                    'alamat' => ucwords($form1Data['alamat']),
+                    'tempat_lahir' => ucwords($form1Data['tlahir']),
+                    'tanggal_lahir' => $form1Data['tgllhr'],
+                    'jenis_kelamin' => $form1Data['kelamin'],
+                    'agama' => $form1Data['agama'],
+                    'statusnikah' => $form1Data['statusNikah'],
+                    'pekerjaan' => ucwords($form1Data['pekerjaan']),
+                    'riwayat_penyakit' => ucwords($form1Data['penyakit']),
+                    'hobi' => ucwords($form1Data['hobi']),
+                    'keahlian' => ucwords($form1Data['keahlian']),
+                    'bahasa' => ucwords($form1Data['bahasa']),
+                    'user_id' => Auth::id()
+                ]);
+    
+                if (!empty($form1Data['asuransi']) && !empty($form1Data['noasuransi'])) {
+                    $asuransi = new Asuransi([
+                        'nama_asuransi' => ucwords($form1Data['asuransi']),
+                        'no_asuransi' => $form1Data['noasuransi']
+                    ]);
+                    $asuransi->peserta_id = $peserta->id;
+                    $asuransi->save();
+                }
+    
+                $request->session()->forget('form1_data'); // Clear session data
+            } else {
+                return redirect()->back()->withErrors(['error' => 'Data peserta tidak ditemukan di sesi.']);
+            }
         }
-        
+    
         // Simpan data pendaftaran
         $pendaftaran = new Pendaftaran([
             'check_in' => null,
@@ -267,23 +291,22 @@ class PendaftaranController extends Controller
             'peserta_id' => $peserta->id,
             'user_id' => Auth::id()
         ]);
-        $pendaftaran->peserta_id = $peserta->id;
-        $pendaftaran->save(); 
-
+        $pendaftaran->save();
+    
         // Ambil data program berdasarkan ID
         $program = Program::findOrFail($validatedData['program']);
-
+    
         // Simpan relasi many-to-many antara pendaftaran dan program
         $pendaftaran->program()->attach($validatedData['program'], [
             'durasi' => $validatedData['durasi'],
             'tipe' => $program->tipe, 
             'harga' => $program->harga, 
-            'tanggal' => null, 
+            'tanggal' => null
         ]);
-
+    
         // Hitung total harga
         $totalHarga = $validatedData['durasi'] * $program->harga;
-
+    
         $transaksi = new Transaksi([
             'total_harga' => $totalHarga,
             'pendaftaran_id' => $pendaftaran->id // Assuming you have a foreign key relationship
@@ -297,24 +320,17 @@ class PendaftaranController extends Controller
             'nama_file' => basename($videoPath), // Nama file saja
             'tanggal_upload' => now(), // Tanggal upload saat ini
             'ukuran_file' => $request->file('video')->getSize(), // Ukuran file dalam byte
-            'peserta_id' => $peserta->id, // Mengaitkan video dengan data peserta 
+            'peserta_id' => $peserta->id // Mengaitkan video dengan data peserta 
         ]);
     
         // Simpan video ke database
         $video->save();
     
-        // Hapus data peserta dari session
-        $request->session()->forget('form1_data');
-    
-        // Kirim data video ke view
         return redirect()->route('riwayat')->with(['success' => 'Pendaftaran Berhasil Disimpan, Tunggu Admin Memverifikasi Video Kemandirian', 'video' => $video]);
-        }
-    
-        return redirect()->back()->withErrors(['error' => 'Data peserta tidak ditemukan di sesi.']);
     }
     
-    public function batalkanPendaftaran($id)
-    {
+    
+    public function batalkanPendaftaran($id){
         $daftar = Pendaftaran::find($id);
         if ($daftar) {
             $daftar->status_pendaftaran = 'Dibatalkan';

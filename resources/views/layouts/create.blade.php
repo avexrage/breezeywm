@@ -10,8 +10,6 @@
         </h1>
     </div>
     <main class="container text-success">
-        @include('layouts.pesan')
-
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Pilih Cara Pendaftaran</h5>
@@ -38,7 +36,7 @@
                             Nama Asuransi: {{ $peserta->asuransi->nama_asuransi ?? 'Tidak Ada' }}<br>
                             Nomor Asuransi: {{ $peserta->asuransi->no_asuransi ?? 'Tidak Ada' }}<br>
                         </p>
-                        <button class="btn btn-primary" onclick="useOldData({{ $peserta->id }})">Pilih</button>
+                        <button class="btn btn-primary" onclick="useOldData({{ $peserta->id }}, {{ $program->id_program }})">Pilih</button>
                     </div>
                 </div>
             @empty
@@ -49,7 +47,7 @@
                 </div>
             @endforelse
         </div>
-        
+        @include('layouts.pesan') 
         <form action="{{ route('simpanform') }}" method="POST" id="newDataForm" style="display:none;">
             @csrf
             <input type="hidden" name="program_id" value="{{ $program->id_program }}">
@@ -201,9 +199,13 @@
             document.getElementById('oldDataCards').style.display = 'block';
             document.getElementById('newDataForm').style.display = 'none';
         }
-        function useOldData(pesertaId) {
-            window.location.href = '{{ route("showdaftar") }}?peserta_id=' + pesertaId;
+        function useOldData(pesertaId, programId) {
+        if (programId == 111) {
+            window.location.href = '{{ route("showdaftar") }}?peserta_id=' + pesertaId + '&program_id=' + programId;
+        } else if (programId == 21) {
+            window.location.href = '{{ route("showdaftar2") }}?peserta_id=' + pesertaId + '&program_id=' + programId;
         }
+}
     </script>
 </body>
 
