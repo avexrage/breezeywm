@@ -41,27 +41,27 @@ class AdminController extends Controller
 
 //Pendaftaran Day
     public function showPendaftaranDay(Request $request) {
-        $query = DB::table('data_peserta')
-            ->join('user', 'data_peserta.user_id', '=', 'user.id')
-            ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-            ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+        $query = DB::table('peserta')
+            ->join('user', 'peserta.user_id', '=', 'user.id')
+            ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+            ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
             ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
             ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
             ->select(
                 'pendaftaran.id as pendaftaran_id',
-                'data_peserta.nama_lengkap_peserta',
-                'data_peserta.ktp as nomor_ktp_peserta',
-                'data_peserta.alamat as alamat_peserta',
-                'data_peserta.tempat_lahir as tempat_lahir_peserta',
-                'data_peserta.tanggal_lahir as tanggal_lahir_peserta',
-                'data_peserta.jenis_kelamin as jenis_kelamin_peserta',
-                'data_peserta.agama as agama_peserta',
-                'data_peserta.statusnikah as status_nikah_peserta',
-                'data_peserta.pekerjaan as pekerjaan_peserta',
-                'data_peserta.keahlian as keahlian_peserta',
-                'data_peserta.hobi as hobi_peserta',
-                'data_peserta.bahasa as bahasa_peserta',
-                'data_peserta.riwayat_penyakit as riwayat_penyakit_peserta',
+                'peserta.nama_lengkap_peserta',
+                'peserta.ktp as nomor_ktp_peserta',
+                'peserta.alamat as alamat_peserta',
+                'peserta.tempat_lahir as tempat_lahir_peserta',
+                'peserta.tanggal_lahir as tanggal_lahir_peserta',
+                'peserta.jenis_kelamin as jenis_kelamin_peserta',
+                'peserta.agama as agama_peserta',
+                'peserta.statusnikah as status_nikah_peserta',
+                'peserta.pekerjaan as pekerjaan_peserta',
+                'peserta.keahlian as keahlian_peserta',
+                'peserta.hobi as hobi_peserta',
+                'peserta.bahasa as bahasa_peserta',
+                'peserta.riwayat_penyakit as riwayat_penyakit_peserta',
                 'asuransi.nama_asuransi as nama_asuransi',
                 'asuransi.no_asuransi as no_asuransi',
                 'user.ktp as nomor_ktp_penanggung_jawab',
@@ -84,7 +84,7 @@ class AdminController extends Controller
             ->where('program.nama_program', 'LIKE', '%Day Care%');
     
         if ($request->has('search')) {
-            $query->where('data_peserta.nama_lengkap_peserta', 'like', '%' . $request->search . '%');
+            $query->where('peserta.nama_lengkap_peserta', 'like', '%' . $request->search . '%');
         }
     
         $pendaftaranPaginated = $query->orderBy('pendaftaran.created_at', 'desc')->paginate(11);
@@ -163,15 +163,15 @@ class AdminController extends Controller
 
                 $startDate = $request->get('start_date');
                 $endDate = $request->get('end_date');
-            $pendaftaran = DB::table('data_peserta')
-            ->join('user', 'data_peserta.user_id', '=', 'user.id')
-            ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-            ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+            $pendaftaran = DB::table('peserta')
+            ->join('user', 'peserta.user_id', '=', 'user.id')
+            ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+            ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
             ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
             ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
             ->select(
                 'pendaftaran.id as pendaftaran_id',
-                'data_peserta.nama_lengkap_peserta',
+                'peserta.nama_lengkap_peserta',
                 'asuransi.nama_asuransi',
                 'asuransi.no_asuransi',
                 'pendaftaran.created_at as tanggal_daftar',
@@ -249,28 +249,28 @@ class AdminController extends Controller
 
 //Pendaftaran Grha
     public function showPendaftaranGrha(Request $request){
-        $query = DB::table('data_peserta')
-            ->join('user', 'data_peserta.user_id', '=', 'user.id')
-            ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-            ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+        $query = DB::table('peserta')
+            ->join('user', 'peserta.user_id', '=', 'user.id')
+            ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+            ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
             ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
             ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
-            ->leftJoin('video', 'data_peserta.id', '=', 'video.data_peserta_id')
+            ->leftJoin('video', 'peserta.id', '=', 'video.peserta_id')
             ->select(
                 'pendaftaran.id as pendaftaran_id',
-                'data_peserta.nama_lengkap_peserta',
-                'data_peserta.ktp as nomor_ktp_peserta',
-                'data_peserta.alamat as alamat_peserta',
-                'data_peserta.tempat_lahir as tempat_lahir_peserta',
-                'data_peserta.tanggal_lahir as tanggal_lahir_peserta',
-                'data_peserta.jenis_kelamin as jenis_kelamin_peserta',
-                'data_peserta.agama as agama_peserta',
-                'data_peserta.statusnikah as status_nikah_peserta',
-                'data_peserta.pekerjaan as pekerjaan_peserta',
-                'data_peserta.keahlian as keahlian_peserta',
-                'data_peserta.hobi as hobi_peserta',
-                'data_peserta.bahasa as bahasa_peserta',
-                'data_peserta.riwayat_penyakit as riwayat_penyakit_peserta',
+                'peserta.nama_lengkap_peserta',
+                'peserta.ktp as nomor_ktp_peserta',
+                'peserta.alamat as alamat_peserta',
+                'peserta.tempat_lahir as tempat_lahir_peserta',
+                'peserta.tanggal_lahir as tanggal_lahir_peserta',
+                'peserta.jenis_kelamin as jenis_kelamin_peserta',
+                'peserta.agama as agama_peserta',
+                'peserta.statusnikah as status_nikah_peserta',
+                'peserta.pekerjaan as pekerjaan_peserta',
+                'peserta.keahlian as keahlian_peserta',
+                'peserta.hobi as hobi_peserta',
+                'peserta.bahasa as bahasa_peserta',
+                'peserta.riwayat_penyakit as riwayat_penyakit_peserta',
                 'asuransi.nama_asuransi as nama_asuransi',
                 'asuransi.no_asuransi as no_asuransi',
                 'user.ktp as nomor_ktp_penanggung_jawab',
@@ -294,7 +294,7 @@ class AdminController extends Controller
             ->where('program.nama_program', 'LIKE', '%Grha Wredha Mulya%');
     
         if ($request->has('search')) {
-            $query->where('data_peserta.nama_lengkap_peserta', 'like', '%' . $request->search . '%');
+            $query->where('peserta.nama_lengkap_peserta', 'like', '%' . $request->search . '%');
         }
     
         $pendaftaranPaginated = $query->orderBy('pendaftaran.created_at', 'desc')->paginate(11);
@@ -319,15 +319,15 @@ class AdminController extends Controller
             $startDate = $request->get('start_date');
             $endDate = $request->get('end_date');
 
-        $pendaftaranGrha = DB::table('data_peserta')
-            ->join('user', 'data_peserta.user_id', '=', 'user.id')
-            ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-            ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+        $pendaftaranGrha = DB::table('peserta')
+            ->join('user', 'peserta.user_id', '=', 'user.id')
+            ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+            ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
             ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
             ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
             ->select(
                 'pendaftaran.id as pendaftaran_id',
-                'data_peserta.nama_lengkap_peserta',
+                'peserta.nama_lengkap_peserta',
                 'asuransi.nama_asuransi',
                 'asuransi.no_asuransi',
                 'pendaftaran.created_at as tanggal_daftar',
@@ -424,15 +424,15 @@ class AdminController extends Controller
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
 
-    $pendaftaran = DB::table('data_peserta')
-        ->join('user', 'data_peserta.user_id', '=', 'user.id')
-        ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-        ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+    $pendaftaran = DB::table('peserta')
+        ->join('user', 'peserta.user_id', '=', 'user.id')
+        ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+        ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
         ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
         ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
         ->select(
             'pendaftaran.id as pendaftaran_id',
-            'data_peserta.nama_lengkap_peserta',
+            'peserta.nama_lengkap_peserta',
             'asuransi.nama_asuransi',
             'asuransi.no_asuransi',
             'pendaftaran.created_at as tanggal_daftar',
@@ -521,15 +521,15 @@ class AdminController extends Controller
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
 
-    $pendaftaran = DB::table('data_peserta')
-        ->join('user', 'data_peserta.user_id', '=', 'user.id')
-        ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-        ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+    $pendaftaran = DB::table('peserta')
+        ->join('user', 'peserta.user_id', '=', 'user.id')
+        ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+        ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
         ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
         ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
         ->select(
             'pendaftaran.id as pendaftaran_id',
-            'data_peserta.nama_lengkap_peserta',
+            'peserta.nama_lengkap_peserta',
             'asuransi.nama_asuransi',
             'asuransi.no_asuransi',
             'pendaftaran.created_at as tanggal_daftar',
@@ -618,15 +618,15 @@ class AdminController extends Controller
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
 
-    $pendaftaran = DB::table('data_peserta')
-        ->join('user', 'data_peserta.user_id', '=', 'user.id')
-        ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-        ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+    $pendaftaran = DB::table('peserta')
+        ->join('user', 'peserta.user_id', '=', 'user.id')
+        ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+        ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
         ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
         ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
         ->select(
             'pendaftaran.id as pendaftaran_id',
-            'data_peserta.nama_lengkap_peserta',
+            'peserta.nama_lengkap_peserta',
             'asuransi.nama_asuransi',
             'asuransi.no_asuransi',
             'pendaftaran.created_at as tanggal_daftar',
@@ -715,15 +715,15 @@ class AdminController extends Controller
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
 
-    $pendaftaran = DB::table('data_peserta')
-        ->join('user', 'data_peserta.user_id', '=', 'user.id')
-        ->leftJoin('asuransi', 'data_peserta.id', '=', 'asuransi.data_peserta_id')
-        ->leftJoin('pendaftaran', 'data_peserta.id', '=', 'pendaftaran.data_peserta_id')
+    $pendaftaran = DB::table('peserta')
+        ->join('user', 'peserta.user_id', '=', 'user.id')
+        ->leftJoin('asuransi', 'peserta.id', '=', 'asuransi.peserta_id')
+        ->leftJoin('pendaftaran', 'peserta.id', '=', 'pendaftaran.peserta_id')
         ->leftJoin('detail_pendaftaran', 'pendaftaran.id', '=', 'detail_pendaftaran.pendaftaran_id')
         ->leftJoin('program', 'detail_pendaftaran.program_id', '=', 'program.id_program')
         ->select(
             'pendaftaran.id as pendaftaran_id',
-            'data_peserta.nama_lengkap_peserta',
+            'peserta.nama_lengkap_peserta',
             'asuransi.nama_asuransi',
             'asuransi.no_asuransi',
             'pendaftaran.created_at as tanggal_daftar',
